@@ -1,0 +1,40 @@
+{
+  "name": "fuma-tienda",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Tienda online de ropa Fuma (Evaluación Parcial 2, DSY1104)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "karma start karma.conf.cjs",
+    "test:coverage": "karma start karma.conf.cjs --coverage"
+  },
+  "dependencies": {
+    "bootstrap": "5.3.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.28.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.26.0",
+    "@babel/preset-env": "7.26.0",
+    "@babel/preset-react": "7.25.9",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.1.0",
+    "@vitejs/plugin-react": "4.3.4",
+    "babel-loader": "9.2.1",
+    "css-loader": "7.1.2",
+    "jasmine-core": "5.4.0",
+    "karma": "6.4.4",
+    "karma-chrome-launcher": "3.2.0",
+    "karma-coverage": "2.2.1",
+    "karma-jasmine": "5.1.0",
+    "karma-spec-reporter": "0.0.36",
+    "karma-webpack": "5.0.1",
+    "style-loader": "4.0.0",
+    "vite": "5.4.11",
+    "webpack": "5.97.1"
+  }
+}
