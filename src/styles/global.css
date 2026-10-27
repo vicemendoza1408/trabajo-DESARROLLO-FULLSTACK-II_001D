@@ -1,0 +1,4 @@
+/* Estilos generales. Todo lo que Bootstrap ya cubre no se repite aquí. */
+body {
+  min-height: 100vh;
+}
