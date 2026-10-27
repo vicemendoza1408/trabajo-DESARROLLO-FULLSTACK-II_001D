@@ -1,4 +1,16 @@
 /* Estilos generales. Todo lo que Bootstrap ya cubre no se repite aquí. */
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Barra superior y pie con el color de marca definido en variables.css. */
+.fuma-navbar {
+  background-color: var(--fuma-color-principal);
+}
+
+.fuma-footer {
+  background-color: var(--fuma-color-principal);
+  color: #f9fafb;
 }
