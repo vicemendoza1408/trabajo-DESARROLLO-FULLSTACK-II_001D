@@ -2,6 +2,9 @@
 // en Chrome sin interfaz (headless). Webpack y Babel traducen el JSX.
 const path = require("path");
 
+// Cobertura: solo se instrumenta el código de la aplicación (src), nunca las pruebas.
+const conCobertura = process.argv.includes("--coverage");
+
 module.exports = function (config) {
   config.set({
     basePath: "",
@@ -28,6 +31,9 @@ module.exports = function (config) {
                   ["@babel/preset-env", { targets: { chrome: "100" } }],
                   ["@babel/preset-react", { runtime: "automatic" }],
                 ],
+                plugins: conCobertura
+                  ? [["babel-plugin-istanbul", { exclude: ["src/tests/**"] }]]
+                  : [],
               },
             },
           },
@@ -48,7 +54,11 @@ module.exports = function (config) {
       : ["spec"],
     coverageReporter: {
       dir: path.join(__dirname, "coverage"),
-      reporters: [{ type: "html" }, { type: "text-summary" }],
+      reporters: [
+        { type: "text", subdir: "." },
+        { type: "text-summary" },
+        { type: "html" },
+      ],
     },
 
     browsers: ["ChromeHeadlessCI"],

@@ -36,3 +36,15 @@ describe("carrito", () => {
     expect(resultado.length).toBe(0);
   });
 });
+
+describe("cambiarCantidad con cantidad positiva", () => {
+  it("actualiza la cantidad del ítem indicado sin tocar los demás", () => {
+    const items = [
+      { idProducto: 1, nombre: "A", imagen: "", precioUnitario: 100, cantidad: 1 },
+      { idProducto: 2, nombre: "B", imagen: "", precioUnitario: 200, cantidad: 1 },
+    ];
+    const resultado = cambiarCantidad(items, 2, 5);
+    expect(resultado[1].cantidad).toBe(5);
+    expect(resultado[0].cantidad).toBe(1);
+  });
+});

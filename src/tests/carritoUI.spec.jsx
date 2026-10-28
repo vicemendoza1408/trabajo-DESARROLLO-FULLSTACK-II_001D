@@ -98,3 +98,25 @@ describe("PaginaCarrito", () => {
     expect(screen.getByRole("heading", { name: "Tu carrito está vacío" })).toBeTruthy();
   });
 });
+
+// Pruebas de los botones de cantidad: el − y el + informan la nueva cantidad.
+describe("botones de cantidad del carrito", () => {
+  it("informa cantidad - 1 al pulsar −", () => {
+    const espia = jasmine.createSpy("onCambiar");
+    render(<SelectorCantidad cantidad={3} onCambiar={espia} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Disminuir cantidad" }));
+
+    expect(espia).toHaveBeenCalledWith(2);
+  });
+
+  it("ItemCarrito pasa el id y la nueva cantidad al pulsar +", () => {
+    const espiaCambiar = jasmine.createSpy("onCambiarCantidad");
+    const item = { idProducto: 3, nombre: "Polera", imagen: "x.svg", precioUnitario: 9990, cantidad: 1 };
+    render(<ItemCarrito item={item} onCambiarCantidad={espiaCambiar} onEliminar={() => {}} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Aumentar cantidad" }));
+
+    expect(espiaCambiar).toHaveBeenCalledWith(3, 2);
+  });
+});

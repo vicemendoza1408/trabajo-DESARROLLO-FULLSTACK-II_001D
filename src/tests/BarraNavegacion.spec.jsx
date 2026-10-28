@@ -39,3 +39,32 @@ describe("BarraNavegacion", () => {
     expect(screen.getByRole("link", { name: /Ofertas/ }).getAttribute("href")).toBe("/ofertas");
   });
 });
+
+// Pruebas de la barra con sesión iniciada: enlace de administración y cierre de sesión.
+describe("BarraNavegacion con sesión iniciada", () => {
+  it("muestra el enlace de administración y el botón para cerrar sesión", () => {
+    const usuarioAdmin = { id: 2, nombre: "Administrador Fuma", rol: "admin" };
+    render(
+      <MemoryRouter>
+        <BarraNavegacion cantidadCarrito={0} usuario={usuarioAdmin} onCerrarSesion={() => {}} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("link", { name: "Administración" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Cerrar sesión" })).toBeTruthy();
+  });
+
+  it("llama a onCerrarSesion al pulsar Cerrar sesión", () => {
+    const espiaCerrar = jasmine.createSpy("onCerrarSesion");
+    const usuarioCliente = { id: 1, nombre: "Cliente Demo", rol: "cliente" };
+    render(
+      <MemoryRouter>
+        <BarraNavegacion cantidadCarrito={0} usuario={usuarioCliente} onCerrarSesion={espiaCerrar} />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Cerrar sesión" }));
+
+    expect(espiaCerrar).toHaveBeenCalledTimes(1);
+  });
+});
