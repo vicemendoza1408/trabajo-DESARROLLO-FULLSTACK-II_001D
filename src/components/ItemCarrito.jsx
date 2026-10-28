@@ -11,7 +11,7 @@ export default function ItemCarrito({ item, onCambiarCantidad, onEliminar }) {
 
   return (
     <div className="d-flex flex-wrap align-items-center gap-3 py-3 border-bottom">
-      <img src={item.imagen} alt={item.nombre} width="72" height="72" className="rounded" />
+      <img src={item.imagen} alt={item.nombre} width="72" height="72" className="rounded object-fit-cover" />
 
       <div className="flex-grow-1" style={{ minWidth: "140px" }}>
         <h2 className="h6 mb-1">{item.nombre}</h2>

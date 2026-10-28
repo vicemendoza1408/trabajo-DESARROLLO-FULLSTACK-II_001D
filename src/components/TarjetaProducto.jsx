@@ -7,7 +7,7 @@ import PrecioProducto from "./PrecioProducto.jsx";
 export default function TarjetaProducto({ producto, onAgregarAlCarrito }) {
   return (
     <div className="card h-100 shadow-sm">
-      <img src={producto.imagen} alt={producto.nombre} className="card-img-top" />
+      <img src={producto.imagen} alt={producto.nombre} className="card-img-top imagen-producto" />
       <div className="card-body d-flex flex-column">
         <h2 className="h6 card-title">{producto.nombre}</h2>
         <p className="card-text small text-muted">{producto.descripcion}</p>

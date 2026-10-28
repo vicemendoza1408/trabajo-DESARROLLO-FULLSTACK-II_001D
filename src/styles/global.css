@@ -14,3 +14,12 @@ body {
   background-color: var(--fuma-color-principal);
   color: #f9fafb;
 }
+
+/* Las fotos de los productos tienen proporciones distintas. Con un recuadro cuadrado
+   y object-fit: cover todas quedan del mismo tamaño y las tarjetas se ven alineadas. */
+.imagen-producto {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background-color: #f3f4f6;
+}

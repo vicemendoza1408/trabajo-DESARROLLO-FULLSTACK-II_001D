@@ -69,7 +69,7 @@ Fuma es un sistema autocontenido que se ejecuta completamente en el navegador. S
 
 - **S-01.** El usuario accede desde un navegador moderno con JavaScript y localStorage habilitados.
 - **S-02.** El costo de despacho es fijo ($3.990 CLP) y no depende de la comuna ni del peso del pedido.
-- **S-03.** Las imágenes de productos son provisionales (un marcador genérico) hasta que se cargue el material gráfico definitivo.
+- **S-03.** Los 8 productos iniciales tienen una imagen propia guardada en `public/img/`. Los productos que se crean desde el panel usan una imagen genérica, porque el sistema no incluye carga de imágenes.
 
 # 3. Requisitos funcionales
 
@@ -270,6 +270,7 @@ La tabla relaciona cada requisito funcional con los componentes que lo implement
 |------|--------|----------------------------------|------------|
 | 2.0 | Octubre 2026 | Versión final del documento para la Evaluación Parcial 2. Refleja la implementación completa: catálogo, carrito, sesión, checkout, panel administrativo y pruebas unitarias. | Vicente Mendoza |
 | 2.1 | Octubre 2026 | Revisión de afirmaciones: la trazabilidad se ajusta a lo que verifican las pruebas, los requisitos RNF-09, RNF-10 y RNF-11 se acotan a lo comprobado y se referencia `docs/Documento-Testing`. Sin cambios de funcionalidad. | Vicente Mendoza |
+| 2.2 | Octubre 2026 | Se agregan imágenes a los 8 productos iniciales y se actualiza el supuesto S-03. Sin cambios de lógica. | Vicente Mendoza |
 
 # 9. Anexo: resumen de la implementación
 

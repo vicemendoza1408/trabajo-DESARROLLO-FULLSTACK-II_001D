@@ -22,7 +22,7 @@ export default function PaginaDetalleProducto() {
     <div className="container py-5">
       <div className="row g-4 align-items-center">
         <div className="col-md-6">
-          <img className="img-fluid rounded" src={producto.imagen} alt={producto.nombre} />
+          <img className="imagen-producto rounded" src={producto.imagen} alt={producto.nombre} />
         </div>
         <div className="col-md-6">
           <h1 className="h2 fw-bold">{producto.nombre}</h1>
