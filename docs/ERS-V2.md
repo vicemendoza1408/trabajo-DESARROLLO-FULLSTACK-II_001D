@@ -1,8 +1,8 @@
 ---
 title: "Especificación de Requisitos de Software (ERS) — Versión 2"
 subtitle: "Tienda online Fuma · DSY1104 Desarrollo Fullstack II · Evaluación Parcial 2"
-author: "Vicente Mendoza"
-date: "Octubre 2026"
+author: "Vicente Mendoza e Isai Sepulveda"
+date: "29 de octubre de 2026"
 lang: es
 ---
 
@@ -34,6 +34,7 @@ El sistema **no incluye** backend, base de datos en servidor, pasarela de pago r
 ## 1.4 Referencias
 
 - Instrucciones de la Evaluación 2 (Anexo 1), DSY1104.
+- Informe técnico del frontend de Fuma (`docs/Informe-Frontend`).
 - Documento de testing y cobertura de Fuma (`docs/Documento-Testing`) y salida de cobertura (`docs/cobertura.txt`).
 - Capturas de diseño responsivo (`docs/capturas/`).
 - Código fuente y pruebas del repositorio del proyecto.
@@ -130,7 +131,7 @@ Los requisitos se agrupan por módulo. La columna **Vista** indica la ruta donde
 
 | ID | Requisito | Vista | Prioridad |
 |-------|-------------------------------|---------------|-------|
-| RF-32 | El administrador puede ver la lista de productos con categoría, precio y descuento. | `/admin` | Alta |
+| RF-32 | El administrador puede ver la lista de productos con su imagen, categoría, precio y descuento. | `/admin` | Alta |
 | RF-33 | El administrador puede crear un producto nuevo. | `/admin/productos/nuevo` | Alta |
 | RF-34 | El administrador puede editar los datos de un producto existente. | `/admin/productos/:id/editar` | Alta |
 | RF-35 | El administrador puede eliminar un producto, previa confirmación del usuario. | `/admin` | Alta |
@@ -271,6 +272,7 @@ La tabla relaciona cada requisito funcional con los componentes que lo implement
 | 2.0 | Octubre 2026 | Versión final del documento para la Evaluación Parcial 2. Refleja la implementación completa: catálogo, carrito, sesión, checkout, panel administrativo y pruebas unitarias. | Vicente Mendoza |
 | 2.1 | Octubre 2026 | Revisión de afirmaciones: la trazabilidad se ajusta a lo que verifican las pruebas, los requisitos RNF-09, RNF-10 y RNF-11 se acotan a lo comprobado y se referencia `docs/Documento-Testing`. Sin cambios de funcionalidad. | Vicente Mendoza |
 | 2.2 | Octubre 2026 | Se agregan imágenes a los 8 productos iniciales y se actualiza el supuesto S-03. Sin cambios de lógica. | Vicente Mendoza |
+| 2.3 | 29 de octubre de 2026 | Se agrega el informe técnico del frontend (`docs/Informe-Frontend`) a las referencias. La lista de productos del panel de administración muestra una miniatura de la imagen (RF-32) y las fotos de producto se muestran en recuadro cuadrado. Se incorpora a Isai Sepulveda como autor. | Vicente Mendoza e Isai Sepulveda |
 
 # 9. Anexo: resumen de la implementación
 

@@ -1,8 +1,8 @@
 ---
 title: "Documento de testing y cobertura"
 subtitle: "Tienda online Fuma · DSY1104 Desarrollo Fullstack II · Evaluación Parcial 2"
-author: "Vicente Mendoza"
-date: "Octubre 2026"
+author: "Vicente Mendoza e Isai Sepulveda"
+date: "29 de octubre de 2026"
 lang: es
 ---
 
