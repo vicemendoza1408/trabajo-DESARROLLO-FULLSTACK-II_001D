@@ -25,9 +25,9 @@ export default function TablaProductosAdmin({ productos, onEliminar }) {
         <thead>
           <tr>
             <th>Producto</th>
-            <th>Categoría</th>
+            <th className="d-none d-md-table-cell">Categoría</th>
             <th>Precio</th>
-            <th>Descuento</th>
+            <th className="d-none d-sm-table-cell">Descuento</th>
             <th />
           </tr>
         </thead>
@@ -35,9 +35,9 @@ export default function TablaProductosAdmin({ productos, onEliminar }) {
           {productos.map((producto) => (
             <tr key={producto.id}>
               <td>{producto.nombre}</td>
-              <td>{nombreCategoria(producto.idCategoria)}</td>
+              <td className="d-none d-md-table-cell">{nombreCategoria(producto.idCategoria)}</td>
               <td>{formatearPrecio(producto.precio)}</td>
-              <td>{producto.descuentoPorcentaje}%</td>
+              <td className="d-none d-sm-table-cell">{producto.descuentoPorcentaje}%</td>
               <td className="text-end text-nowrap">
                 <Link className="btn btn-sm btn-outline-dark me-2" to={`/admin/productos/${producto.id}/editar`}>
                   Editar

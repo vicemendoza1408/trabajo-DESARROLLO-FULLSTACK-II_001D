@@ -10,10 +10,10 @@ export default function ItemCarrito({ item, onCambiarCantidad, onEliminar }) {
   const subtotalLinea = item.precioUnitario * item.cantidad;
 
   return (
-    <div className="d-flex align-items-center gap-3 py-3 border-bottom">
+    <div className="d-flex flex-wrap align-items-center gap-3 py-3 border-bottom">
       <img src={item.imagen} alt={item.nombre} width="72" height="72" className="rounded" />
 
-      <div className="flex-grow-1">
+      <div className="flex-grow-1" style={{ minWidth: "140px" }}>
         <h2 className="h6 mb-1">{item.nombre}</h2>
         <p className="small text-muted mb-0">{formatearPrecio(item.precioUnitario)} c/u</p>
       </div>

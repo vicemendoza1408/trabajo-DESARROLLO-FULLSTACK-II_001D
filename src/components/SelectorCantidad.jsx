@@ -4,7 +4,7 @@
 //   onCambiar: se llama con la nueva cantidad (cantidad + 1 o cantidad - 1).
 export default function SelectorCantidad({ cantidad, onCambiar }) {
   return (
-    <div className="input-group input-group-sm" style={{ width: "120px" }}>
+    <div className="input-group input-group-sm flex-nowrap" style={{ width: "120px" }}>
       <button
         type="button"
         className="btn btn-outline-secondary"
