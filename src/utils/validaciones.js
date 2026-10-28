@@ -34,3 +34,30 @@ export function validarDatosCheckout(datos) {
 
   return errores;
 }
+
+// Validación del formulario de producto del panel de administración.
+// Recibe los campos tal como los escribe el usuario (texto) y la lista de categorías válidas.
+export function validarProducto(datos, categorias) {
+  const errores = {};
+
+  if (!datos.nombre || datos.nombre.trim() === "") {
+    errores.nombre = "Ingresa el nombre del producto.";
+  }
+
+  const precio = Number(datos.precio);
+  if (!Number.isInteger(precio) || precio <= 0) {
+    errores.precio = "El precio debe ser un número entero mayor que 0.";
+  }
+
+  // Si el descuento viene vacío, se considera 0.
+  const descuento = Number(datos.descuentoPorcentaje || 0);
+  if (!Number.isInteger(descuento) || descuento < 0 || descuento > 100) {
+    errores.descuentoPorcentaje = "El descuento debe ser un número entero entre 0 y 100.";
+  }
+
+  if (!categorias.some((categoria) => categoria.id === datos.idCategoria)) {
+    errores.idCategoria = "Selecciona una categoría.";
+  }
+
+  return errores;
+}

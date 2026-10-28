@@ -16,6 +16,7 @@ import PaginaLogin from "./pages/PaginaLogin.jsx";
 import PaginaAdmin from "./pages/PaginaAdmin.jsx";
 import PaginaAdminProductoFormulario from "./pages/PaginaAdminProductoFormulario.jsx";
 import PaginaNoEncontrada from "./pages/PaginaNoEncontrada.jsx";
+import RutaAdmin from "./components/RutaAdmin.jsx";
 
 // Layout general: barra arriba, pie abajo y, en medio, la página de la ruta actual.
 // La insignia del carrito lee la cantidad desde el contexto.
@@ -39,9 +40,9 @@ export default function App() {
           <Route path="/compra-exitosa/:idPedido" element={<PaginaCompraExitosa />} />
           <Route path="/compra-fallida" element={<PaginaCompraFallida />} />
           <Route path="/login" element={<PaginaLogin />} />
-          <Route path="/admin" element={<PaginaAdmin />} />
-          <Route path="/admin/productos/nuevo" element={<PaginaAdminProductoFormulario />} />
-          <Route path="/admin/productos/:id/editar" element={<PaginaAdminProductoFormulario />} />
+          <Route path="/admin" element={<RutaAdmin><PaginaAdmin /></RutaAdmin>} />
+          <Route path="/admin/productos/nuevo" element={<RutaAdmin><PaginaAdminProductoFormulario /></RutaAdmin>} />
+          <Route path="/admin/productos/:id/editar" element={<RutaAdmin><PaginaAdminProductoFormulario /></RutaAdmin>} />
           <Route path="*" element={<PaginaNoEncontrada />} />
         </Routes>
       </main>
