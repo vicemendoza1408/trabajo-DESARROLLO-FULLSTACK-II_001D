@@ -369,10 +369,11 @@ Lo que **no** hay: un mock con expectativas preprogramadas, módulos reemplazado
 |---|---|---|---|
 | Archivos de prueba y pruebas | 17 y 93 | Conteo del código en `src/tests/` | Implementado |
 | Resultado `TOTAL: 93 SUCCESS` | 10 ejecuciones consecutivas, todas exitosas: 5 de `npm test` y 5 de `npm run test:coverage` | **Ejecuciones locales del autor en su Mac, posteriores al commit `2290d86`** | Verificado manualmente |
-| Navegador de las pruebas | Chrome Headless 156.0.0.0 en Mac OS 10.15.7 (según el nombre de la carpeta `coverage/` generada) | Carpeta `coverage/` de la ejecución de cobertura de la Fase 11 | Evidencia de macOS; ver también la sección 9.3 |
+| Ejecución con salida conservada en la Mac | `Executed 93 of 93 SUCCESS` (`npm test`, 28-oct-2026, 16:37), con el nombre de cada prueba, en Chrome Headless 156.0.0.0 sobre Mac OS 10.15.7. Se hizo con el código de la Fase 14, que respecto de `2290d86` solo cambia comentarios. | `docs/evidencia/salida-karma-mac.txt` | Verificado manualmente (salida conservada) |
+| Navegador de las pruebas | Chrome Headless 156.0.0.0 en Mac OS 10.15.7 | Salida anterior y carpeta `coverage/` de la Fase 11 | Evidencia de macOS; ver también la sección 9.3 |
 | Métricas de cobertura | Ver sección 10 | `docs/cobertura.txt` | Medido antes del commit `2290d86` |
 
-Las ejecuciones hechas en la Mac **no conservaron la salida detallada**, por lo que este documento no transcribe la lista de pruebas de esas ejecuciones. Una salida detallada posterior a `2290d86`, obtenida en otro entorno, se describe en la sección 9.3.
+De las 10 ejecuciones consecutivas de la Mac no se conservó la salida. La única salida detallada de la Mac es la del 28-oct-2026 a las 16:37 (`docs/evidencia/salida-karma-mac.txt`), que es de `npm test` y por tanto no incluye cobertura. Una salida con cobertura posterior a `2290d86`, obtenida en otro entorno, se describe en la sección 9.3.
 
 ## 9.2 Cuándo se midió la cobertura y qué cambió después
 
@@ -532,7 +533,7 @@ Lista para revisar en las fases siguientes. **No se modificó la ERS ni se agreg
 | H-01, H-02, H-05, H-06, H-07 | La ERS V2.1 indica ahora "revisión de código" donde no hay prueba automática. No se agregaron pruebas. |
 | H-03, H-04 | RNF-09, RNF-10 y RNF-11 reformulados a lo comprobado. |
 | H-08, H-09 | Cifras con fuente declarada y referencia a este documento actualizada en la ERS. |
-| H-10 | Cubierto en parte por la sección 9.3 (otro entorno). Una salida de la Mac sigue siendo opcional. |
+| H-10 | Resuelto para las pruebas: hay salida detallada de la Mac (`salida-karma-mac.txt`). La cobertura posterior a `2290d86` solo se midió en el entorno Linux de la sección 9.3; una salida de `npm run test:coverage` en la Mac es opcional. |
 | H-11, H-12 | Pendientes, de baja prioridad. |
 | H-13 | Se atiende al armar el ZIP de entrega. |
 | H-14 | Pendiente: consultarlo con el profesor. |

@@ -7,196 +7,194 @@ asset [1m[32mcommons.js[39m[22m 5.44 MiB [1m[32m[emitted][39m[22m (name:
 asset [1m[32mruntime.js[39m[22m 20 KiB [1m[32m[emitted][39m[22m (name: runtime)
 asset [1m[32mindex.1583902147.js[39m[22m 452 bytes [1m[32m[emitted][39m[22m (name: index.1583902147)
 Entrypoint [1mindex.1583902147[39m[22m 5.46 MiB = [1m[32mruntime.js[39m[22m 20 KiB [1m[32mcommons.js[39m[22m 5.44 MiB [1m[32mindex.1583902147.js[39m[22m 452 bytes
-webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 695 ms
-[32m28 10 2026 16:36:44.836:INFO [karma-server]: [39mKarma v6.4.4 server started at http://localhost:9876/
-[32m28 10 2026 16:36:44.837:INFO [launcher]: [39mLaunching browsers ChromeHeadlessCI with concurrency unlimited
-[32m28 10 2026 16:36:44.840:INFO [launcher]: [39mStarting browser ChromeHeadless
-[32m28 10 2026 16:36:45.784:INFO [Chrome Headless 156.0.0.0 (Mac OS 10.15.7)]: [39mConnected on socket Gn_XJtLWMd0t49AWAAAA with id 83429352
-
-  FormularioCheckout
-    [32m✓ [39mmuestra errores y no confirma cuando el formulario está vacío
-    [32m✓ [39mconfirma con los datos cuando todo es válido
-    [32m✓ [39mmuestra el campo de dirección solo cuando la entrega es despacho
-    [32m✓ [39mactualiza el campo nombre al escribir
-
-  CarritoProvider
-    [32m✓ [39maumenta el contador al agregar un producto
-    [32m✓ [39mguarda el carrito en localStorage al agregar un producto
-    [32m✓ [39mrestaura el carrito guardado al iniciar
+webpack 5.97.1 compiled [1m[32msuccessfully[39m[22m in 680 ms
+[32m28 10 2026 16:37:17.876:INFO [karma-server]: [39mKarma v6.4.4 server started at http://localhost:9876/
+[32m28 10 2026 16:37:17.877:INFO [launcher]: [39mLaunching browsers ChromeHeadlessCI with concurrency unlimited
+[32m28 10 2026 16:37:17.879:INFO [launcher]: [39mStarting browser ChromeHeadless
+[32m28 10 2026 16:37:18.249:INFO [Chrome Headless 156.0.0.0 (Mac OS 10.15.7)]: [39mConnected on socket 2J7BBKRQ1o0YIvMgAAAA with id 60143872
 WARN LOG: [36m'⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.'[39m
 WARN LOG: [36m'⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.'[39m
 
-  PaginaCheckout (flujo de compra)
-    [32m✓ [39mlleva a compra fallida cuando el pago es rechazado
-    [32m✓ [39mcrea el pedido, vacía el carrito y muestra la compra exitosa
-    [32m✓ [39mautocompleta el nombre con el usuario que tiene la sesión iniciada
+  PaginaInicio
+    [32m✓ [39mmuestra el nombre de la tienda
 
-  SelectorCantidad
-    [32m✓ [39minforma cantidad + 1 al pulsar +
-    [32m✓ [39mdeshabilita el botón − cuando la cantidad es 1
+  TablaProductosAdmin
+    [32m✓ [39mmuestra una fila por producto más el encabezado
+    [32m✓ [39melimina el producto solo cuando el usuario confirma
+    [32m✓ [39mno elimina el producto cuando el usuario cancela
 
-  páginas con datos que no existen
-    [32m✓ [39mmuestra 'Producto no encontrado' para un id inexistente
-    [32m✓ [39mmuestra 'Pedido no encontrado' para un pedido inexistente
+  AuthProvider
+    [32m✓ [39mrestaura la sesión guardada al iniciar
+    [32m✓ [39minicia sesión, muestra el usuario y guarda la sesión sin contraseña
+    [32m✓ [39mcierra sesión y borra la sesión guardada
 
-  buscarUsuarioPorCredenciales
-    [32m✓ [39mdevuelve el usuario sin contraseña cuando las credenciales son correctas
-    [32m✓ [39mdevuelve null cuando la contraseña es incorrecta
+  BarraNavegacion
+    [32m✓ [39mincluye enlaces a las secciones principales de la tienda
+    [32m✓ [39mabre y cierra el menú al hacer clic en el botón
+    [32m✓ [39mmuestra la cantidad de ítems del carrito en la insignia
 
-  ListaProductos
-    [32m✓ [39mrenderiza una tarjeta por cada producto
-[33m28 10 2026 16:36:45.943:WARN [web-server]: [39m404: /img/placeholder.svg
-    [32m✓ [39mmuestra un mensaje y ninguna tarjeta cuando la lista está vacía
+  FormularioProducto
+    [32m✓ [39mmuestra errores y no guarda cuando los datos no son válidos
+    [32m✓ [39mcarga los datos del producto al editarlo
+    [32m✓ [39mentrega el precio como número cuando los datos son válidos
 
-  AlertaMensaje
-    [32m✓ [39mmuestra el mensaje dentro de una alerta
-
-  PaginaAdmin (eliminar desde el panel)
-    [32m✓ [39melimina el producto de la base de datos cuando el usuario confirma
-
-  BarraBusqueda
-    [32m✓ [39minforma el texto escrito por el usuario
-
-  FormularioLogin
-    [32m✓ [39mactualiza los campos a medida que el usuario escribe
-    [32m✓ [39mentrega el correo y la contraseña al enviar
-
-  botones de cantidad del carrito
-    [32m✓ [39mItemCarrito pasa el id y la nueva cantidad al pulsar +
-[33m28 10 2026 16:36:45.951:WARN [web-server]: [39m404: /x.svg
-    [32m✓ [39minforma cantidad - 1 al pulsar −
-
-  TarjetaProducto
-    [32m✓ [39mmuestra nombre, precio e imagen del producto
-[33m28 10 2026 16:36:45.953:WARN [web-server]: [39m404: /img/placeholder.svg
-    [32m✓ [39mllama a onAgregarAlCarrito con el producto al pulsar Agregar
+  validarDatosCheckout
+    [32m✓ [39mexige dirección solo cuando el despacho es a domicilio
+    [32m✓ [39mrechaza un número de tarjeta que no tiene 16 dígitos
+    [32m✓ [39mrechaza un correo sin formato válido
+    [32m✓ [39mmarca todos los campos vacíos con un error
+    [32m✓ [39mno devuelve errores cuando los datos son válidos
 
   RutaAdmin
     [32m✓ [39mmuestra la página cuando el usuario es administrador
     [32m✓ [39mredirige al login cuando no hay sesión de administrador
 
-  pagoEsAprobado
-    [32m✓ [39maprueba una tarjeta de 16 dígitos que no empieza con 0000
-    [32m✓ [39mrechaza tarjetas que empiezan con 0000
+  ResumenPedido
+    [32m✓ [39mno muestra total cuando el despacho aún no se conoce
+    [32m✓ [39mmuestra el total cuando se informa el costo de envío
 
-  AuthProvider
-    [32m✓ [39mcierra sesión y borra la sesión guardada
-    [32m✓ [39mrestaura la sesión guardada al iniciar
-    [32m✓ [39minicia sesión, muestra el usuario y guarda la sesión sin contraseña
+  PaginaAdmin (eliminar desde el panel)
+    [32m✓ [39melimina el producto de la base de datos cuando el usuario confirma
 
-  CarritoProvider (acciones secundarias)
-    [32m✓ [39mvacía todo el carrito
-    [32m✓ [39mcambia la cantidad de un producto desde el contexto
-    [32m✓ [39mquita un producto específico del carrito
+  precios
+    [32m✓ [39mcalcula el precio con descuento redondeado a pesos enteros
+    [32m✓ [39msuma el despacho solo cuando la entrega es a domicilio
+    [32m✓ [39mno cobra envío cuando el cliente retira en tienda
+    [32m✓ [39mdevuelve el mismo precio cuando no hay descuento
+    [32m✓ [39mformatea montos en pesos chilenos
 
-  PrecioProducto
-    [32m✓ [39mmuestra el precio original tachado y el final cuando hay descuento
-    [32m✓ [39mmuestra un único precio cuando no hay descuento
+  baseDeDatos (CRUD de productos)
+    [32m✓ [39mactualiza los campos indicados de un producto existente
+    [32m✓ [39mcrea un producto con id nuevo y lo persiste
+    [32m✓ [39mcarga los datos semilla la primera vez
+    [32m✓ [39mguarda los cambios en localStorage al crear (mock de setItem)
+    [32m✓ [39melimina un producto existente y reporta el resultado
+    [32m✓ [39mdevuelve null al actualizar un producto que no existe
 
-  PaginaCategorias
-    [32m✓ [39mmuestra solo los productos de la categoría de la URL
-[33m28 10 2026 16:36:45.961:WARN [web-server]: [39m404: /img/placeholder.svg
-
-  PaginaCarrito
-    [32m✓ [39mmuestra un mensaje cuando el carrito está vacío
-    [32m✓ [39mmuestra los productos guardados y los vacía al pulsar Vaciar carrito
-[33m28 10 2026 16:36:45.963:WARN [web-server]: [39m404: /x.svg
-
-  TablaProductosAdmin
-    [32m✓ [39melimina el producto solo cuando el usuario confirma
-    [32m✓ [39mno elimina el producto cuando el usuario cancela
-    [32m✓ [39mmuestra una fila por producto más el encabezado
-
-  PaginaOfertas
-    [32m✓ [39mmuestra únicamente los productos que tienen descuento
-[33m28 10 2026 16:36:45.966:WARN [web-server]: [39m404: /img/placeholder.svg
-
-  CRUD de productos desde el panel
-    [32m✓ [39mcrea un producto y lo muestra en el panel
-    [32m✓ [39mactualiza el precio de un producto existente
-
-  CampoFormulario
-    [32m✓ [39mmuestra el mensaje de error solo cuando hay un error
-
-  PaginaLogin
-    [32m✓ [39mmuestra un aviso cuando los campos están vacíos
-    [32m✓ [39mmuestra un error con credenciales incorrectas
+  FormularioCheckout (elegir despacho)
+    [32m✓ [39minforma el cambio a despacho al elegir la opción de domicilio
 
   BarraNavegacion con sesión iniciada
     [32m✓ [39mmuestra el enlace de administración y el botón para cerrar sesión
     [32m✓ [39mllama a onCerrarSesion al pulsar Cerrar sesión
 
-  filtros de productos
-    [32m✓ [39mfiltra por texto sin distinguir mayúsculas
-    [32m✓ [39mfiltra por categoría y devuelve todos si no hay categoría
-    [32m✓ [39mdevuelve todos los productos cuando el texto está vacío
-    [32m✓ [39mobtiene solo los productos con descuento
+  páginas con datos que no existen
+    [32m✓ [39mmuestra 'Pedido no encontrado' para un pedido inexistente
+    [32m✓ [39mmuestra 'Producto no encontrado' para un id inexistente
 
-  PaginaProductos
-    [32m✓ [39mfiltra los productos según el texto buscado
-[33m28 10 2026 16:36:45.984:WARN [web-server]: [39m404: /img/placeholder.svg
+  ItemCarrito
+    [32m✓ [39mmuestra el subtotal de la línea (precio por cantidad)
+[33m28 10 2026 16:37:18.378:WARN [web-server]: [39m404: /x.svg
+    [32m✓ [39mllama a onEliminar con el id del producto
 
-  validarDatosCheckout
-    [32m✓ [39mmarca todos los campos vacíos con un error
-    [32m✓ [39mrechaza un número de tarjeta que no tiene 16 dígitos
-    [32m✓ [39mexige dirección solo cuando el despacho es a domicilio
-    [32m✓ [39mrechaza un correo sin formato válido
-    [32m✓ [39mno devuelve errores cuando los datos son válidos
-
-  FormularioProducto
-    [32m✓ [39mentrega el precio como número cuando los datos son válidos
-    [32m✓ [39mcarga los datos del producto al editarlo
-    [32m✓ [39mmuestra errores y no guarda cuando los datos no son válidos
-
-  PaginaInicio
-    [32m✓ [39mmuestra el nombre de la tienda
-
-  precios
-    [32m✓ [39mdevuelve el mismo precio cuando no hay descuento
-    [32m✓ [39mno cobra envío cuando el cliente retira en tienda
-    [32m✓ [39msuma el despacho solo cuando la entrega es a domicilio
-    [32m✓ [39mformatea montos en pesos chilenos
-    [32m✓ [39mcalcula el precio con descuento redondeado a pesos enteros
-
-  carrito
-    [32m✓ [39msuma cantidad cuando el producto ya estaba en el carrito
-    [32m✓ [39melimina el ítem cuando la cantidad cambia a 0
-    [32m✓ [39mno modifica el arreglo original al agregar
-    [32m✓ [39magrega un producto nuevo con cantidad 1 y precio final
-
-  BarraNavegacion
-    [32m✓ [39mabre y cierra el menú al hacer clic en el botón
-    [32m✓ [39mincluye enlaces a las secciones principales de la tienda
-    [32m✓ [39mmuestra la cantidad de ítems del carrito en la insignia
-
-  FormularioCheckout (elegir despacho)
-    [32m✓ [39minforma el cambio a despacho al elegir la opción de domicilio
-
-  rutas de la aplicación
-    [32m✓ [39mmuestra el producto que corresponde al id de la URL
-[33m28 10 2026 16:36:45.994:WARN [web-server]: [39m404: /img/placeholder.svg
-    [32m✓ [39mmuestra la página de no encontrada para una ruta inexistente
+  PaginaOfertas
+    [32m✓ [39mmuestra únicamente los productos que tienen descuento
+[33m28 10 2026 16:37:18.380:WARN [web-server]: [39m404: /img/placeholder.svg
 
   cambiarCantidad con cantidad positiva
     [32m✓ [39mactualiza la cantidad del ítem indicado sin tocar los demás
 
-  ItemCarrito
-    [32m✓ [39mllama a onEliminar con el id del producto
-[33m28 10 2026 16:36:45.995:WARN [web-server]: [39m404: /x.svg
-    [32m✓ [39mmuestra el subtotal de la línea (precio por cantidad)
+  PaginaCategorias
+    [32m✓ [39mmuestra solo los productos de la categoría de la URL
 
-  ResumenPedido
-    [32m✓ [39mmuestra el total cuando se informa el costo de envío
-    [32m✓ [39mno muestra total cuando el despacho aún no se conoce
+  buscarUsuarioPorCredenciales
+    [32m✓ [39mdevuelve null cuando la contraseña es incorrecta
+    [32m✓ [39mdevuelve el usuario sin contraseña cuando las credenciales son correctas
 
-  baseDeDatos (CRUD de productos)
-    [32m✓ [39mguarda los cambios en localStorage al crear (mock de setItem)
-    [32m✓ [39mcrea un producto con id nuevo y lo persiste
-    [32m✓ [39mcarga los datos semilla la primera vez
-    [32m✓ [39mdevuelve null al actualizar un producto que no existe
-    [32m✓ [39melimina un producto existente y reporta el resultado
-    [32m✓ [39mactualiza los campos indicados de un producto existente
+  carrito
+    [32m✓ [39msuma cantidad cuando el producto ya estaba en el carrito
+    [32m✓ [39magrega un producto nuevo con cantidad 1 y precio final
+    [32m✓ [39mno modifica el arreglo original al agregar
+    [32m✓ [39melimina el ítem cuando la cantidad cambia a 0
 
-Chrome Headless 156.0.0.0 (Mac OS 10.15.7): Executed 93 of 93[32m SUCCESS[39m (0.091 secs / 0.103 secs)
+  rutas de la aplicación
+    [32m✓ [39mmuestra el producto que corresponde al id de la URL
+[33m28 10 2026 16:37:18.385:WARN [web-server]: [39m404: /img/placeholder.svg
+    [32m✓ [39mmuestra la página de no encontrada para una ruta inexistente
+
+  PrecioProducto
+    [32m✓ [39mmuestra un único precio cuando no hay descuento
+    [32m✓ [39mmuestra el precio original tachado y el final cuando hay descuento
+
+  PaginaProductos
+    [32m✓ [39mfiltra los productos según el texto buscado
+[33m28 10 2026 16:37:18.388:WARN [web-server]: [39m404: /img/placeholder.svg
+
+  CarritoProvider (acciones secundarias)
+    [32m✓ [39mquita un producto específico del carrito
+    [32m✓ [39mvacía todo el carrito
+    [32m✓ [39mcambia la cantidad de un producto desde el contexto
+
+  PaginaLogin
+    [32m✓ [39mmuestra un error con credenciales incorrectas
+    [32m✓ [39mmuestra un aviso cuando los campos están vacíos
+
+  pagoEsAprobado
+    [32m✓ [39mrechaza tarjetas que empiezan con 0000
+    [32m✓ [39maprueba una tarjeta de 16 dígitos que no empieza con 0000
+
+  SelectorCantidad
+    [32m✓ [39minforma cantidad + 1 al pulsar +
+    [32m✓ [39mdeshabilita el botón − cuando la cantidad es 1
+
+  PaginaCheckout (flujo de compra)
+    [32m✓ [39mcrea el pedido, vacía el carrito y muestra la compra exitosa
+    [32m✓ [39mlleva a compra fallida cuando el pago es rechazado
+    [32m✓ [39mautocompleta el nombre con el usuario que tiene la sesión iniciada
+
+  CRUD de productos desde el panel
+    [32m✓ [39mcrea un producto y lo muestra en el panel
+    [32m✓ [39mactualiza el precio de un producto existente
+
+  FormularioLogin
+    [32m✓ [39mactualiza los campos a medida que el usuario escribe
+    [32m✓ [39mentrega el correo y la contraseña al enviar
+
+  CarritoProvider
+    [32m✓ [39maumenta el contador al agregar un producto
+    [32m✓ [39mguarda el carrito en localStorage al agregar un producto
+    [32m✓ [39mrestaura el carrito guardado al iniciar
+
+  FormularioCheckout
+    [32m✓ [39mactualiza el campo nombre al escribir
+    [32m✓ [39mmuestra errores y no confirma cuando el formulario está vacío
+    [32m✓ [39mconfirma con los datos cuando todo es válido
+    [32m✓ [39mmuestra el campo de dirección solo cuando la entrega es despacho
+
+  AlertaMensaje
+    [32m✓ [39mmuestra el mensaje dentro de una alerta
+
+  ListaProductos
+    [32m✓ [39mmuestra un mensaje y ninguna tarjeta cuando la lista está vacía
+    [32m✓ [39mrenderiza una tarjeta por cada producto
+[33m28 10 2026 16:37:18.417:WARN [web-server]: [39m404: /img/placeholder.svg
+
+  filtros de productos
+    [32m✓ [39mfiltra por texto sin distinguir mayúsculas
+    [32m✓ [39mfiltra por categoría y devuelve todos si no hay categoría
+    [32m✓ [39mobtiene solo los productos con descuento
+    [32m✓ [39mdevuelve todos los productos cuando el texto está vacío
+
+  botones de cantidad del carrito
+    [32m✓ [39minforma cantidad - 1 al pulsar −
+    [32m✓ [39mItemCarrito pasa el id y la nueva cantidad al pulsar +
+[33m28 10 2026 16:37:18.419:WARN [web-server]: [39m404: /x.svg
+
+  PaginaCarrito
+    [32m✓ [39mmuestra un mensaje cuando el carrito está vacío
+    [32m✓ [39mmuestra los productos guardados y los vacía al pulsar Vaciar carrito
+
+  CampoFormulario
+    [32m✓ [39mmuestra el mensaje de error solo cuando hay un error
+
+  TarjetaProducto
+    [32m✓ [39mllama a onAgregarAlCarrito con el producto al pulsar Agregar
+[33m28 10 2026 16:37:18.421:WARN [web-server]: [39m404: /img/placeholder.svg
+    [32m✓ [39mmuestra nombre, precio e imagen del producto
+
+  BarraBusqueda
+    [32m✓ [39minforma el texto escrito por el usuario
+
+Chrome Headless 156.0.0.0 (Mac OS 10.15.7): Executed 93 of 93[32m SUCCESS[39m (0.097 secs / 0.086 secs)
 [32mTOTAL: 93 SUCCESS[39m
 

@@ -77,5 +77,6 @@ Hay 93 pruebas unitarias en 17 archivos. Karma carga todos los archivos `*.spec.
 - `docs/ERS-V2.md` y `docs/ERS-V2.docx`: especificación de requisitos de software (versión 2).
 - `docs/Documento-Testing.md` y `docs/Documento-Testing.docx`: documento de testing y cobertura.
 - `docs/cobertura.txt`: salida de `npm run test:coverage`.
+- `docs/evidencia/salida-karma-mac.txt`: salida completa de `npm test` (ejecutada en macOS).
 - `docs/evidencia/salida-karma-linux.txt`: salida completa de las pruebas con cobertura (ejecutada en Linux).
 - `docs/capturas/`: capturas del diseño responsivo en tres anchos.
