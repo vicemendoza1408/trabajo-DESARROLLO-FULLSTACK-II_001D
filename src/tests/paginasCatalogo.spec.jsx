@@ -35,6 +35,10 @@ describe("PaginaProductos", () => {
 });
 
 describe("PaginaCategorias", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   // Ruta con parámetro: /categorias/accesorios muestra solo los productos de esa categoría.
   it("muestra solo los productos de la categoría de la URL", () => {
     render(
@@ -53,6 +57,10 @@ describe("PaginaCategorias", () => {
 });
 
 describe("PaginaOfertas", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   // Filtro de ofertas: solo aparecen los productos con descuento.
   it("muestra únicamente los productos que tienen descuento", () => {
     render(
