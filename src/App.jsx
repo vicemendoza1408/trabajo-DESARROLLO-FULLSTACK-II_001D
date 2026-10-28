@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import BarraNavegacion from "./components/BarraNavegacion.jsx";
 import { useCarrito } from "./context/CarritoContext.jsx";
+import { useAuth } from "./context/AuthContext.jsx";
 import PieDePagina from "./components/PieDePagina.jsx";
 import PaginaInicio from "./pages/PaginaInicio.jsx";
 import PaginaProductos from "./pages/PaginaProductos.jsx";
@@ -20,10 +21,11 @@ import PaginaNoEncontrada from "./pages/PaginaNoEncontrada.jsx";
 // La insignia del carrito lee la cantidad desde el contexto.
 export default function App() {
   const { cantidadTotal } = useCarrito();
+  const { usuario, cerrarSesion } = useAuth();
 
   return (
     <>
-      <BarraNavegacion cantidadCarrito={cantidadTotal} />
+      <BarraNavegacion cantidadCarrito={cantidadTotal} usuario={usuario} onCerrarSesion={cerrarSesion} />
       <main className="flex-grow-1">
         <Routes>
           <Route path="/" element={<PaginaInicio />} />

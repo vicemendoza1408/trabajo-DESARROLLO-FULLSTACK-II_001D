@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 // Barra de navegación responsiva de Fuma.
-// En pantallas pequeñas se colapsa en un botón; el estado "menuAbierto" controla si se muestra.
 // Props:
-//   cantidadCarrito: número de ítems del carrito (se muestra como insignia).
-export default function BarraNavegacion({ cantidadCarrito }) {
+//   cantidadCarrito: número de ítems del carrito (insignia).
+//   usuario: usuario conectado, o null si nadie ha iniciado sesión.
+//   onCerrarSesion: se llama al pulsar "Cerrar sesión".
+export default function BarraNavegacion({ cantidadCarrito, usuario = null, onCerrarSesion = () => {} }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   // Cierra el menú en móvil al elegir una opción.
@@ -15,6 +16,11 @@ export default function BarraNavegacion({ cantidadCarrito }) {
 
   function alternarMenu() {
     setMenuAbierto((abierto) => !abierto);
+  }
+
+  function cerrarSesionYMenu() {
+    cerrarMenu();
+    onCerrarSesion();
   }
 
   const claseColapso = menuAbierto ? "navbar-collapse collapse show" : "navbar-collapse collapse";
@@ -37,7 +43,7 @@ export default function BarraNavegacion({ cantidadCarrito }) {
         </button>
 
         <div className={claseColapso}>
-          <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ms-auto align-items-lg-center">
             <li className="nav-item">
               <NavLink className="nav-link" to="/productos" onClick={cerrarMenu}>Productos</NavLink>
             </li>
@@ -52,9 +58,28 @@ export default function BarraNavegacion({ cantidadCarrito }) {
                 Carrito <span className="badge bg-warning text-dark">{cantidadCarrito}</span>
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/login" onClick={cerrarMenu}>Ingresar</NavLink>
-            </li>
+
+            {usuario === null ? (
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/login" onClick={cerrarMenu}>Ingresar</NavLink>
+              </li>
+            ) : (
+              <>
+                {usuario.rol === "admin" && (
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/admin" onClick={cerrarMenu}>Administración</NavLink>
+                  </li>
+                )}
+                <li className="nav-item">
+                  <span className="nav-link">Hola, {usuario.nombre}</span>
+                </li>
+                <li className="nav-item">
+                  <button type="button" className="btn btn-link nav-link" onClick={cerrarSesionYMenu}>
+                    Cerrar sesión
+                  </button>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

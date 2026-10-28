@@ -1,7 +1,7 @@
 // Base de datos simulada de Fuma: operaciones CRUD sobre localStorage.
 // Los datos sobreviven a una recarga de la página. Ninguna función usa React.
 import { CLAVE_PEDIDOS, CLAVE_PRODUCTOS } from "../utils/constantes.js";
-import { PRODUCTOS_INICIALES } from "./datosIniciales.js";
+import { PRODUCTOS_INICIALES, USUARIOS_INICIALES } from "./datosIniciales.js";
 
 // Lee una lista desde localStorage. Si la clave aún no existe, la crea con los datos semilla.
 function leerLista(clave, datosSemilla) {
@@ -81,4 +81,24 @@ export function crearPedido(datosPedido) {
   const nuevoPedido = { ...datosPedido, id: siguienteId(pedidos) };
   escribirLista(CLAVE_PEDIDOS, [...pedidos, nuevoPedido]);
   return nuevoPedido;
+}
+
+// ---------- Usuarios (solo consulta, para el inicio de sesión) ----------
+
+// Busca un usuario por correo y contraseña. Devuelve sus datos públicos (sin contraseña) o null.
+export function buscarUsuarioPorCredenciales(correo, contrasena) {
+  const usuario = USUARIOS_INICIALES.find(
+    (candidato) => candidato.correo === correo && candidato.contrasena === contrasena
+  );
+  if (!usuario) {
+    return null;
+  }
+  return {
+    id: usuario.id,
+    nombre: usuario.nombre,
+    correo: usuario.correo,
+    telefono: usuario.telefono,
+    direccion: usuario.direccion,
+    rol: usuario.rol,
+  };
 }

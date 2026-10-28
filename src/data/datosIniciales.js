@@ -19,3 +19,10 @@ export const PRODUCTOS_INICIALES = [
   { id: 7, nombre: "Gorro de lana", descripcion: "Gorro tejido, talla única.", precio: 6990, descuentoPorcentaje: 0, idCategoria: "accesorios", imagen: "/img/placeholder.svg" },
   { id: 8, nombre: "Cinturón de cuero", descripcion: "Hebilla metálica, 100 cm.", precio: 14990, descuentoPorcentaje: 10, idCategoria: "accesorios", imagen: "/img/placeholder.svg" },
 ];
+
+// Usuarios simulados para el inicio de sesión.
+// Las contraseñas van en texto plano SOLO porque es una simulación académica (sin backend).
+export const USUARIOS_INICIALES = [
+  { id: 1, nombre: "Cliente Demo", correo: "cliente@fuma.cl", contrasena: "cliente123", telefono: "912345678", direccion: "Av. Principal 123", rol: "cliente" },
+  { id: 2, nombre: "Administrador Fuma", correo: "admin@fuma.cl", contrasena: "admin123", telefono: "987654321", direccion: "Local Fuma 1", rol: "admin" },
+];

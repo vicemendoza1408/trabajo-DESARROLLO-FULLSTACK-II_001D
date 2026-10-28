@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import App from "../App.jsx";
+import { AuthProvider } from "../context/AuthContext.jsx";
 import { CarritoProvider } from "../context/CarritoContext.jsx";
 
 // Pruebas de rutas: la aplicación muestra la página correcta según la URL.
@@ -12,9 +13,11 @@ describe("rutas de la aplicación", () => {
   function renderizarEn(ruta) {
     return render(
       <MemoryRouter initialEntries={[ruta]}>
-        <CarritoProvider>
-          <App />
-        </CarritoProvider>
+        <AuthProvider>
+          <CarritoProvider>
+            <App />
+          </CarritoProvider>
+        </AuthProvider>
       </MemoryRouter>
     );
   }
