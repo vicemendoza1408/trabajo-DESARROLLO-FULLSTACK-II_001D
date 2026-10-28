@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import BarraNavegacion from "./components/BarraNavegacion.jsx";
+import { useCarrito } from "./context/CarritoContext.jsx";
 import PieDePagina from "./components/PieDePagina.jsx";
 import PaginaInicio from "./pages/PaginaInicio.jsx";
 import PaginaProductos from "./pages/PaginaProductos.jsx";
@@ -16,11 +17,13 @@ import PaginaAdminProductoFormulario from "./pages/PaginaAdminProductoFormulario
 import PaginaNoEncontrada from "./pages/PaginaNoEncontrada.jsx";
 
 // Layout general: barra arriba, pie abajo y, en medio, la página de la ruta actual.
-// El contador del carrito será 0 hasta la Fase 5, cuando se conecte al contexto.
+// La insignia del carrito lee la cantidad desde el contexto.
 export default function App() {
+  const { cantidadTotal } = useCarrito();
+
   return (
     <>
-      <BarraNavegacion cantidadCarrito={0} />
+      <BarraNavegacion cantidadCarrito={cantidadTotal} />
       <main className="flex-grow-1">
         <Routes>
           <Route path="/" element={<PaginaInicio />} />
