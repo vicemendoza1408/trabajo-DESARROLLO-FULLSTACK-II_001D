@@ -26,5 +26,11 @@ export function validarDatosCheckout(datos) {
     errores.direccion = "Ingresa una dirección de despacho.";
   }
 
+  // El número de tarjeta debe tener 16 dígitos (los espacios se ignoran).
+  const numeroTarjeta = (datos.numeroTarjeta || "").replace(/\s/g, "");
+  if (!/^\d{16}$/.test(numeroTarjeta)) {
+    errores.numeroTarjeta = "Ingresa una tarjeta de 16 dígitos.";
+  }
+
   return errores;
 }

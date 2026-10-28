@@ -8,11 +8,17 @@ describe("validarDatosCheckout", () => {
     correo: "vice.mendoza@duocuc.cl",
     telefono: "912345678",
     direccion: "Av. Principal 123",
+    numeroTarjeta: "4111 1111 1111 1111",
     opcionEntrega: "despacho",
   };
 
   it("no devuelve errores cuando los datos son válidos", () => {
     expect(validarDatosCheckout(datosCorrectos)).toEqual({});
+  });
+
+  it("rechaza un número de tarjeta que no tiene 16 dígitos", () => {
+    const errores = validarDatosCheckout({ ...datosCorrectos, numeroTarjeta: "1234" });
+    expect(errores.numeroTarjeta).toBeDefined();
   });
 
   it("marca todos los campos vacíos con un error", () => {
