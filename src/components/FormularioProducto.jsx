@@ -45,7 +45,7 @@ export default function FormularioProducto({ productoInicial = null, categorias,
       nombre: campos.nombre.trim(),
       descripcion: campos.descripcion.trim(),
       precio: Number(campos.precio),
-      descuentoPorcentaje: Number(campos.descuentoPorcentaje || 0),
+      descuentoPorcentaje: Number(campos.descuentoPorcentaje || 0), // descuento vacío = 0
       idCategoria: campos.idCategoria,
       imagen: productoInicial ? productoInicial.imagen : IMAGEN_POR_DEFECTO,
     });

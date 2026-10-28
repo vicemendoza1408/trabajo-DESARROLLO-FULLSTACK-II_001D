@@ -5,7 +5,7 @@ import { useCarrito } from "../context/CarritoContext.jsx";
 import { obtenerProductos } from "../data/baseDeDatos.js";
 import { filtrarPorTexto } from "../utils/filtros.js";
 
-// Catálogo completo con búsqueda por nombre.
+// Catálogo completo con búsqueda por nombre. Los productos se leen una sola vez al abrir la página.
 export default function PaginaProductos() {
   const [textoBusqueda, setTextoBusqueda] = useState("");
   const [productos] = useState(() => obtenerProductos());

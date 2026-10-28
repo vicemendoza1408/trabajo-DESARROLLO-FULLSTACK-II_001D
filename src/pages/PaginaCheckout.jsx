@@ -45,7 +45,7 @@ export default function PaginaCheckout() {
       cliente: {
         nombre: datos.nombre.trim(),
         correo: datos.correo.trim(),
-        telefono: datos.telefono.replace(/\s/g, ""),
+        telefono: datos.telefono.replace(/\s/g, ""), // se guarda sin espacios
       },
       direccion: opcionEntrega === ENTREGA_DESPACHO ? datos.direccion.trim() : null,
       opcionEntrega,

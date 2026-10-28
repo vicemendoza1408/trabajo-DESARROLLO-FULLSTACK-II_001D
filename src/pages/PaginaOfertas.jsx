@@ -4,7 +4,7 @@ import { useCarrito } from "../context/CarritoContext.jsx";
 import { obtenerProductos } from "../data/baseDeDatos.js";
 import { obtenerOfertas } from "../utils/filtros.js";
 
-// Solo los productos que tienen descuento.
+// Solo los productos que tienen descuento. Se leen una sola vez al abrir la página.
 export default function PaginaOfertas() {
   const [ofertas] = useState(() => obtenerOfertas(obtenerProductos()));
   const { agregarAlCarrito } = useCarrito();

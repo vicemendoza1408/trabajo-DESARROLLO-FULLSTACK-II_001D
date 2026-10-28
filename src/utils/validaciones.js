@@ -2,7 +2,7 @@
 // reciben los datos y devuelven un objeto con los errores (vacío si todo está bien).
 import { ENTREGA_DESPACHO } from "./constantes.js";
 
-const EXPRESION_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EXPRESION_CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // algo@dominio.ext, sin espacios
 // Teléfono chileno de celular: 9 dígitos que empiezan con 9.
 const EXPRESION_TELEFONO = /^9\d{8}$/;
 

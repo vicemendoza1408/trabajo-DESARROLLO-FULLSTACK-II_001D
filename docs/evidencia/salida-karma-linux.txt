@@ -1,0 +1,204 @@
+Salida de 'npm run test:coverage' (Karma + Jasmine, reporter spec)
+Entorno: Linux, Chrome Headless 153.0.0.0 (NO es la Mac del autor)
+Fecha: 2026-10-28, posterior al commit 2290d86 y a ajustes de comentarios en src/ (sin cambios de lógica)
+Resultado: Executed 93 of 93 SUCCESS
+-----------------------------------------------------------------------------
+> fuma-tienda@0.1.0 test:coverage
+> karma start karma.conf.cjs --coverage
+Webpack bundling...
+Entrypoint index.3535593932 5.73 MiB = runtime.js 20 KiB commons.js 5.71 MiB index.3535593932.js 452 bytes
+WARN LOG: '⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.'
+WARN LOG: '⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.'
+  PaginaInicio
+    ✓ muestra el nombre de la tienda
+  botones de cantidad del carrito
+    ✓ informa cantidad - 1 al pulsar −
+    ✓ ItemCarrito pasa el id y la nueva cantidad al pulsar +
+  CarritoProvider (acciones secundarias)
+    ✓ cambia la cantidad de un producto desde el contexto
+    ✓ vacía todo el carrito
+    ✓ quita un producto específico del carrito
+  AuthProvider
+    ✓ inicia sesión, muestra el usuario y guarda la sesión sin contraseña
+    ✓ cierra sesión y borra la sesión guardada
+    ✓ restaura la sesión guardada al iniciar
+  PaginaLogin
+    ✓ muestra un error con credenciales incorrectas
+    ✓ muestra un aviso cuando los campos están vacíos
+  RutaAdmin
+    ✓ redirige al login cuando no hay sesión de administrador
+    ✓ muestra la página cuando el usuario es administrador
+  SelectorCantidad
+    ✓ informa cantidad + 1 al pulsar +
+    ✓ deshabilita el botón − cuando la cantidad es 1
+  CampoFormulario
+    ✓ muestra el mensaje de error solo cuando hay un error
+  BarraBusqueda
+    ✓ informa el texto escrito por el usuario
+  FormularioProducto
+    ✓ entrega el precio como número cuando los datos son válidos
+    ✓ carga los datos del producto al editarlo
+    ✓ muestra errores y no guarda cuando los datos no son válidos
+  FormularioLogin
+    ✓ entrega el correo y la contraseña al enviar
+    ✓ actualiza los campos a medida que el usuario escribe
+  ItemCarrito
+    ✓ muestra el subtotal de la línea (precio por cantidad)
+    ✓ llama a onEliminar con el id del producto
+  filtros de productos
+    ✓ filtra por categoría y devuelve todos si no hay categoría
+    ✓ obtiene solo los productos con descuento
+    ✓ filtra por texto sin distinguir mayúsculas
+    ✓ devuelve todos los productos cuando el texto está vacío
+  AlertaMensaje
+    ✓ muestra el mensaje dentro de una alerta
+  ResumenPedido
+    ✓ no muestra total cuando el despacho aún no se conoce
+    ✓ muestra el total cuando se informa el costo de envío
+  PrecioProducto
+    ✓ muestra un único precio cuando no hay descuento
+    ✓ muestra el precio original tachado y el final cuando hay descuento
+  páginas con datos que no existen
+    ✓ muestra 'Producto no encontrado' para un id inexistente
+    ✓ muestra 'Pedido no encontrado' para un pedido inexistente
+  PaginaCarrito
+    ✓ muestra los productos guardados y los vacía al pulsar Vaciar carrito
+    ✓ muestra un mensaje cuando el carrito está vacío
+  PaginaCategorias
+    ✓ muestra solo los productos de la categoría de la URL
+  BarraNavegacion
+    ✓ muestra la cantidad de ítems del carrito en la insignia
+    ✓ incluye enlaces a las secciones principales de la tienda
+    ✓ abre y cierra el menú al hacer clic en el botón
+  FormularioCheckout (elegir despacho)
+    ✓ informa el cambio a despacho al elegir la opción de domicilio
+  validarDatosCheckout
+    ✓ rechaza un número de tarjeta que no tiene 16 dígitos
+    ✓ marca todos los campos vacíos con un error
+    ✓ rechaza un correo sin formato válido
+    ✓ no devuelve errores cuando los datos son válidos
+    ✓ exige dirección solo cuando el despacho es a domicilio
+  TablaProductosAdmin
+    ✓ muestra una fila por producto más el encabezado
+    ✓ elimina el producto solo cuando el usuario confirma
+    ✓ no elimina el producto cuando el usuario cancela
+  FormularioCheckout
+    ✓ muestra el campo de dirección solo cuando la entrega es despacho
+    ✓ actualiza el campo nombre al escribir
+    ✓ muestra errores y no confirma cuando el formulario está vacío
+    ✓ confirma con los datos cuando todo es válido
+  PaginaProductos
+    ✓ filtra los productos según el texto buscado
+  PaginaCheckout (flujo de compra)
+    ✓ lleva a compra fallida cuando el pago es rechazado
+    ✓ crea el pedido, vacía el carrito y muestra la compra exitosa
+    ✓ autocompleta el nombre con el usuario que tiene la sesión iniciada
+  precios
+    ✓ suma el despacho solo cuando la entrega es a domicilio
+    ✓ no cobra envío cuando el cliente retira en tienda
+    ✓ formatea montos en pesos chilenos
+    ✓ calcula el precio con descuento redondeado a pesos enteros
+    ✓ devuelve el mismo precio cuando no hay descuento
+  buscarUsuarioPorCredenciales
+    ✓ devuelve null cuando la contraseña es incorrecta
+    ✓ devuelve el usuario sin contraseña cuando las credenciales son correctas
+  TarjetaProducto
+    ✓ muestra nombre, precio e imagen del producto
+    ✓ llama a onAgregarAlCarrito con el producto al pulsar Agregar
+  baseDeDatos (CRUD de productos)
+    ✓ carga los datos semilla la primera vez
+    ✓ devuelve null al actualizar un producto que no existe
+    ✓ crea un producto con id nuevo y lo persiste
+    ✓ actualiza los campos indicados de un producto existente
+    ✓ elimina un producto existente y reporta el resultado
+    ✓ guarda los cambios en localStorage al crear (mock de setItem)
+  PaginaAdmin (eliminar desde el panel)
+    ✓ elimina el producto de la base de datos cuando el usuario confirma
+  BarraNavegacion con sesión iniciada
+    ✓ muestra el enlace de administración y el botón para cerrar sesión
+    ✓ llama a onCerrarSesion al pulsar Cerrar sesión
+  PaginaOfertas
+    ✓ muestra únicamente los productos que tienen descuento
+  carrito
+    ✓ agrega un producto nuevo con cantidad 1 y precio final
+    ✓ elimina el ítem cuando la cantidad cambia a 0
+    ✓ suma cantidad cuando el producto ya estaba en el carrito
+    ✓ no modifica el arreglo original al agregar
+  CRUD de productos desde el panel
+    ✓ actualiza el precio de un producto existente
+    ✓ crea un producto y lo muestra en el panel
+  cambiarCantidad con cantidad positiva
+    ✓ actualiza la cantidad del ítem indicado sin tocar los demás
+  ListaProductos
+    ✓ renderiza una tarjeta por cada producto
+    ✓ muestra un mensaje y ninguna tarjeta cuando la lista está vacía
+  pagoEsAprobado
+    ✓ aprueba una tarjeta de 16 dígitos que no empieza con 0000
+    ✓ rechaza tarjetas que empiezan con 0000
+  CarritoProvider
+    ✓ guarda el carrito en localStorage al agregar un producto
+    ✓ restaura el carrito guardado al iniciar
+    ✓ aumenta el contador al agregar un producto
+  rutas de la aplicación
+    ✓ muestra el producto que corresponde al id de la URL
+    ✓ muestra la página de no encontrada para una ruta inexistente
+Chrome Headless 153.0.0.0 (Linux 0.0.0): Executed 93 of 93 SUCCESS (0.502 secs / 0.372 secs)
+TOTAL: 93 SUCCESS
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   96.18 |    90.69 |   95.83 |   95.85 |                   
+ src               |     100 |      100 |     100 |     100 |                   
+  App.jsx          |     100 |      100 |     100 |     100 |                   
+ src/components    |   95.78 |    96.15 |   91.66 |    95.5 |                   
+  ...taMensaje.jsx |     100 |      100 |     100 |     100 |                   
+  ...aBusqueda.jsx |     100 |      100 |     100 |     100 |                   
+  ...avegacion.jsx |     100 |      100 |   83.33 |     100 |                   
+  ...ormulario.jsx |     100 |      100 |     100 |     100 |                   
+  ...ategorias.jsx |     100 |      100 |     100 |     100 |                   
+  ...oCheckout.jsx |   89.47 |      100 |   83.33 |   88.23 | 47,58             
+  ...arioLogin.jsx |     100 |      100 |     100 |     100 |                   
+  ...oProducto.jsx |    90.9 |     92.3 |   83.33 |      90 | 59,64             
+  ItemCarrito.jsx  |     100 |      100 |     100 |     100 |                   
+  ...Productos.jsx |     100 |      100 |     100 |     100 |                   
+  PieDePagina.jsx  |     100 |      100 |     100 |     100 |                   
+  ...oProducto.jsx |     100 |      100 |     100 |     100 |                   
+  ...menPedido.jsx |     100 |      100 |     100 |     100 |                   
+  RutaAdmin.jsx    |     100 |      100 |     100 |     100 |                   
+  ...rCantidad.jsx |     100 |      100 |     100 |     100 |                   
+  ...ctosAdmin.jsx |     100 |       75 |     100 |     100 | 8                 
+  ...aProducto.jsx |     100 |      100 |     100 |     100 |                   
+ src/context       |    90.9 |    85.71 |     100 |      90 |                   
+  AuthContext.jsx  |   90.47 |       90 |     100 |   90.47 | 14,57             
+  ...toContext.jsx |    91.3 |       75 |     100 |   89.47 | 14,62             
+ src/data          |     100 |      100 |     100 |     100 |                   
+  baseDeDatos.js   |     100 |      100 |     100 |     100 |                   
+  ...sIniciales.js |     100 |      100 |     100 |     100 |                   
+ src/pages         |   95.29 |    77.77 |      96 |      95 |                   
+  PaginaAdmin.jsx  |     100 |      100 |     100 |     100 |                   
+  ...ormulario.jsx |    90.9 |       90 |     100 |    90.9 | 14                
+  ...naCarrito.jsx |     100 |      100 |     100 |     100 |                   
+  ...ategorias.jsx |     100 |       50 |     100 |     100 | 21                
+  ...aCheckout.jsx |   93.75 |       75 |     100 |   93.75 | 20                
+  ...raExitosa.jsx |     100 |       75 |     100 |     100 | 23                
+  ...raFallida.jsx |     100 |      100 |     100 |     100 |                   
+  ...eProducto.jsx |   85.71 |      100 |      50 |   85.71 | 33                
+  PaginaInicio.jsx |     100 |      100 |     100 |     100 |                   
+  PaginaLogin.jsx  |   91.66 |     62.5 |     100 |   91.66 | 24                
+  ...ncontrada.jsx |     100 |      100 |     100 |     100 |                   
+  ...naOfertas.jsx |     100 |      100 |     100 |     100 |                   
+  ...Productos.jsx |     100 |      100 |     100 |     100 |                   
+ src/utils         |   98.52 |    92.85 |     100 |   98.36 |                   
+  carrito.js       |     100 |     87.5 |     100 |     100 | 12                
+  constantes.js    |     100 |      100 |     100 |     100 |                   
+  filtros.js       |     100 |      100 |     100 |     100 |                   
+  pago.js          |     100 |       75 |     100 |     100 | 5                 
+  precios.js       |     100 |      100 |     100 |     100 |                   
+  validaciones.js  |   96.42 |    94.73 |     100 |   96.29 | 55                
+-------------------|---------|----------|---------|---------|-------------------
+=============================== Coverage summary ===============================
+Statements   : 96.18% ( 328/341 )
+Branches     : 90.69% ( 156/172 )
+Functions    : 95.83% ( 138/144 )
+Lines        : 95.85% ( 301/314 )
+================================================================================

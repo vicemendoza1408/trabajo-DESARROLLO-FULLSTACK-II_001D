@@ -369,10 +369,10 @@ Lo que **no** hay: un mock con expectativas preprogramadas, módulos reemplazado
 |---|---|---|---|
 | Archivos de prueba y pruebas | 17 y 93 | Conteo del código en `src/tests/` | Implementado |
 | Resultado `TOTAL: 93 SUCCESS` | 10 ejecuciones consecutivas, todas exitosas: 5 de `npm test` y 5 de `npm run test:coverage` | **Ejecuciones locales del autor en su Mac, posteriores al commit `2290d86`** | Verificado manualmente |
-| Navegador de las pruebas | Chrome Headless 156.0.0.0 en Mac OS 10.15.7 (según el nombre de la carpeta `coverage/` generada) | Carpeta `coverage/` de la ejecución de cobertura de la Fase 11 | Evidencia de un solo entorno |
+| Navegador de las pruebas | Chrome Headless 156.0.0.0 en Mac OS 10.15.7 (según el nombre de la carpeta `coverage/` generada) | Carpeta `coverage/` de la ejecución de cobertura de la Fase 11 | Evidencia de macOS; ver también la sección 9.3 |
 | Métricas de cobertura | Ver sección 10 | `docs/cobertura.txt` | Medido antes del commit `2290d86` |
 
-**No se conserva una salida detallada de Karma posterior al commit** `2290d86`. Por eso este documento no incluye una captura de la lista de pruebas ni cifras de una nueva ejecución de cobertura.
+Las ejecuciones hechas en la Mac **no conservaron la salida detallada**, por lo que este documento no transcribe la lista de pruebas de esas ejecuciones. Una salida detallada posterior a `2290d86`, obtenida en otro entorno, se describe en la sección 9.3.
 
 ## 9.2 Cuándo se midió la cobertura y qué cambió después
 
@@ -380,7 +380,17 @@ Lo que **no** hay: un mock con expectativas preprogramadas, módulos reemplazado
 - El problema de aislamiento se corrigió después, en el commit `2290d86` (14:17).
 - Entre `8943a25` y el estado actual, el único cambio en `src/`, `karma.conf.cjs` y `package.json` es el de `2290d86`: **8 líneas agregadas en `src/tests/paginasCatalogo.spec.jsx`**. El código de la aplicación no cambió.
 
-Con eso es razonable esperar que la cobertura del código de la aplicación siga siendo la misma, **pero no se afirma como una medición**: las cifras de la sección 10 corresponden a la ejecución anterior al commit.
+Con eso es razonable esperar que la cobertura del código de la aplicación siga siendo la misma. Las cifras de la sección 10 corresponden a la ejecución anterior al commit; la sección 9.3 aporta una medición posterior, hecha en otro entorno, que coincide.
+
+## 9.3 Verificación adicional en otro entorno (Fase 14)
+
+En la Fase 14 se ejecutó `npm run test:coverage` sobre una copia del proyecto en un entorno **Linux con Chrome Headless 153.0.0.0**, es decir, **no en la Mac del autor**. Fue después del commit `2290d86` y de ajustes de comentarios en 8 archivos de `src/` (sin cambios de lógica). Resultados:
+
+- `Executed 93 of 93 SUCCESS`.
+- Cobertura: sentencias 96,18 %, ramas 90,69 %, funciones 95,83 % y líneas 95,85 %. Las filas de la tabla por archivo coinciden una a una con `docs/cobertura.txt`.
+- La salida completa, con el nombre de cada prueba, está en `docs/evidencia/salida-karma-linux.txt`. Incluye avisos `WARN` de React Router sobre cambios futuros de la versión 7; son avisos de la librería, no fallas.
+
+Esta ejecución no reemplaza las 10 de la Mac: las complementa con un segundo entorno y con la lista de pruebas por nombre.
 
 # 10. Cobertura
 
@@ -514,6 +524,18 @@ Lista para revisar en las fases siguientes. **No se modificó la ERS ni se agreg
 | H-12 | Importación sin uso | `adminCrud.spec.jsx` importa `actualizarProducto` y no lo usa. No afecta el resultado. | Limpiar si se desea. |
 | H-13 | Entregable | El ZIP recibido incluye `node_modules`, `coverage/` y un `fuma-tienda.zip` anidado. | Excluirlos al armar la entrega (Fase 14). |
 | H-14 | Frase del Anexo sobre backend | El Anexo menciona "integrado con el backend y frontend", pero los requisitos concretos describen una fuente de datos simulada y la evaluación se centra en el frontend. No se implementó backend. | Consultarlo con el profesor. |
+
+## 14.1 Estado de los hallazgos tras la Fase 14
+
+| Hallazgos | Estado |
+|---|---|
+| H-01, H-02, H-05, H-06, H-07 | La ERS V2.1 indica ahora "revisión de código" donde no hay prueba automática. No se agregaron pruebas. |
+| H-03, H-04 | RNF-09, RNF-10 y RNF-11 reformulados a lo comprobado. |
+| H-08, H-09 | Cifras con fuente declarada y referencia a este documento actualizada en la ERS. |
+| H-10 | Cubierto en parte por la sección 9.3 (otro entorno). Una salida de la Mac sigue siendo opcional. |
+| H-11, H-12 | Pendientes, de baja prioridad. |
+| H-13 | Se atiende al armar el ZIP de entrega. |
+| H-14 | Pendiente: consultarlo con el profesor. |
 
 # Anexo A. Listado de las 93 pruebas
 

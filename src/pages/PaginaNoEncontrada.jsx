@@ -1,4 +1,4 @@
-// Página esqueleto. Se completará en su fase correspondiente.
+// Se muestra cuando la URL no coincide con ninguna ruta (la ruta "*" de App.jsx).
 export default function PaginaNoEncontrada() {
   return (
     <div className="container py-5">

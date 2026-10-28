@@ -7,7 +7,7 @@ import { obtenerProductos } from "../data/baseDeDatos.js";
 import { CATEGORIAS_INICIALES } from "../data/datosIniciales.js";
 import { filtrarPorCategoria } from "../utils/filtros.js";
 
-// Productos separados por categoría. La categoría llega en la URL (/categorias/:idCategoria).
+// Productos separados por categoría. La categoría llega en la URL (/categorias/:idCategoria). Los productos se leen una sola vez al abrir la página.
 export default function PaginaCategorias() {
   const { idCategoria } = useParams();
   const [productos] = useState(() => obtenerProductos());

@@ -34,7 +34,7 @@ El sistema **no incluye** backend, base de datos en servidor, pasarela de pago r
 ## 1.4 Referencias
 
 - Instrucciones de la Evaluación 2 (Anexo 1), DSY1104.
-- Documento de cobertura de testing de Fuma (`docs/cobertura.txt`).
+- Documento de testing y cobertura de Fuma (`docs/Documento-Testing`) y salida de cobertura (`docs/cobertura.txt`).
 - Capturas de diseño responsivo (`docs/capturas/`).
 - Código fuente y pruebas del repositorio del proyecto.
 
@@ -144,14 +144,14 @@ Los requisitos se agrupan por módulo. La columna **Vista** indica la ruta donde
 | RNF-01 | Usabilidad / Responsividad | La interfaz se adapta a móvil (375 px), tablet (768 px) y escritorio (1280 px) usando Bootstrap 5.3. | Capturas en tres anchos, `docs/capturas/` |
 | RNF-02 | Mantenibilidad | Cada componente tiene una responsabilidad clara y recibe sus datos mediante props. | Revisión de código y estructura de carpetas |
 | RNF-03 | Mantenibilidad | La lógica de negocio (precios, carrito, validaciones, filtros) está separada de la interfaz como funciones puras. | Pruebas unitarias sobre `utils/` |
-| RNF-04 | Calidad | Cobertura de pruebas unitarias de al menos 90 % de las líneas de código. | `npm run test:coverage`; resultado: 95,9 % |
-| RNF-05 | Calidad | Todas las pruebas unitarias deben pasar antes de cada entrega. | `npm test`; resultado: 93 de 93 |
+| RNF-04 | Calidad | Cobertura de pruebas unitarias de al menos 90 % de las líneas de código. | `npm run test:coverage`; resultado: 95,9 % (fuente: `docs/cobertura.txt`; análisis en `docs/Documento-Testing`) |
+| RNF-05 | Calidad | Todas las pruebas unitarias deben pasar antes de cada entrega. | `npm test`; resultado: 93 de 93 en 10 ejecuciones locales consecutivas |
 | RNF-06 | Persistencia | El carrito, la sesión, los productos y los pedidos se conservan en localStorage entre recargas. | Pruebas de persistencia en `carritoContext.spec.jsx`, `authContext.spec.jsx` y `baseDeDatos.spec.js` |
 | RNF-07 | Seguridad (simulada) | La sesión guardada no contiene la contraseña del usuario. | Prueba en `authContext.spec.jsx` |
 | RNF-08 | Seguridad (simulada) | El número de tarjeta no se almacena en el pedido. | Revisión del código de `PaginaCheckout.jsx` |
-| RNF-09 | Rendimiento | Todas las operaciones son locales y síncronas, sin llamadas de red, por lo que las respuestas son inmediatas para el usuario. | Verificación manual |
-| RNF-10 | Compatibilidad | Funciona en navegadores modernos con soporte de ES2020, localStorage y React 18. Las pruebas se ejecutan en Chrome. | Pruebas en Chrome headless |
-| RNF-11 | Portabilidad | Se instala y ejecuta con `npm install` y `npm run dev` en macOS, Windows o Linux con Node.js 18 o superior. | Instalación en equipos de prueba |
+| RNF-09 | Rendimiento | Todas las operaciones son locales y síncronas, sin llamadas de red. No se midieron tiempos de respuesta. | Revisión de código (no hay llamadas de red); sin mediciones de rendimiento |
+| RNF-10 | Compatibilidad | Está pensado para navegadores modernos con soporte de ES2020, localStorage y React 18. Solo se ha verificado en Chrome. | Pruebas automáticas en Chrome headless; no se probó en otros navegadores |
+| RNF-11 | Portabilidad | Se instala y ejecuta con `npm install` y `npm run dev`, con Node.js 18 o superior (requisito declarado en el `README.md`). | Desarrollo y pruebas en macOS; en Linux se comprobaron `npm ci`, `npm run build` y las pruebas sobre un clon limpio. No se probó en Windows ni con Node.js 18 |
 
 # 5. Modelo de datos
 
@@ -234,24 +234,24 @@ La tabla relaciona cada requisito funcional con los componentes que lo implement
 | RF-16 | `CarritoProvider` (sincronización con localStorage) | `carritoContext.spec.jsx` |
 | RF-17 | `PaginaLogin`, `FormularioLogin`, `AuthProvider.iniciarSesion` | `login.spec.jsx`, `authContext.spec.jsx` |
 | RF-18 | `PaginaLogin` (validación y mensaje de error) | `login.spec.jsx` |
-| RF-19 | `PaginaLogin` (redirección según rol) | `login.spec.jsx` |
-| RF-20 | `BarraNavegacion` (saludo y cierre de sesión), `AuthProvider.cerrarSesion` | `BarraNavegacion.spec.jsx`, `authContext.spec.jsx` |
+| RF-19 | `PaginaLogin` (redirección según rol) | Revisión de código (no hay prueba automática de un inicio de sesión exitoso) |
+| RF-20 | `BarraNavegacion` (saludo y cierre de sesión), `AuthProvider.cerrarSesion` | `BarraNavegacion.spec.jsx` (cierre de sesión), `authContext.spec.jsx`; el saludo "Hola, nombre" se verifica por revisión de código |
 | RF-21 | `AuthProvider` (leerSesionGuardada) | `authContext.spec.jsx` |
 | RF-22 | `FormularioCheckout`, `CampoFormulario` | `checkout.spec.jsx` |
-| RF-23 | `validarDatosCheckout` | `validaciones.spec.js`, `checkout.spec.jsx` |
+| RF-23 | `validarDatosCheckout` | `validaciones.spec.js`, `checkout.spec.jsx`; el formato del teléfono se verifica por revisión de código (las pruebas cubren el teléfono vacío) |
 | RF-24 | `validarDatosCheckout` (dirección condicional), `FormularioCheckout` | `validaciones.spec.js`, `checkout.spec.jsx` |
 | RF-25 | `FormularioCheckout` (opciones de entrega), `calcularTotales` | `checkout.spec.jsx`, `precios.spec.js` |
 | RF-26 | `PaginaCheckout` (datosIniciales desde el usuario) | `checkout.spec.jsx` |
 | RF-27 | `pagoEsAprobado` | `validaciones.spec.js`, `checkout.spec.jsx` |
 | RF-28 | `PaginaCheckout.finalizarCompra`, `crearPedido` | `checkout.spec.jsx`, `baseDeDatos.spec.js` |
-| RF-29 | `PaginaCompraFallida` | `checkout.spec.jsx` |
+| RF-29 | `PaginaCompraFallida` | `checkout.spec.jsx` (muestra la compra fallida); la conservación del carrito se verifica por revisión de código |
 | RF-30 | `PaginaCompraExitosa`, `obtenerPedidoPorId` | `casosLimite.spec.jsx`, `checkout.spec.jsx` |
 | RF-31 | `PaginaCheckout` (pedido sin número de tarjeta) | Revisión de código |
 | RF-32 | `PaginaAdmin`, `TablaProductosAdmin` | `adminCrud.spec.jsx` |
 | RF-33 | `PaginaAdminProductoFormulario`, `FormularioProducto`, `crearProducto` | `adminCrud.spec.jsx`, `baseDeDatos.spec.js` |
 | RF-34 | `PaginaAdminProductoFormulario`, `actualizarProducto` | `adminCrud.spec.jsx`, `baseDeDatos.spec.js` |
 | RF-35 | `TablaProductosAdmin` (confirmación), `eliminarProducto` | `adminCrud.spec.jsx`, `casosLimite.spec.jsx`, `baseDeDatos.spec.js` |
-| RF-36 | `validarProducto` | `adminCrud.spec.jsx` |
+| RF-36 | `validarProducto` | `adminCrud.spec.jsx`; el rango del descuento se verifica por revisión de código |
 | RF-37 | `RutaAdmin`, `App.jsx` | `adminCrud.spec.jsx` (`RutaAdmin`) |
 
 # 7. Criterios de aceptación generales
@@ -269,6 +269,7 @@ La tabla relaciona cada requisito funcional con los componentes que lo implement
 | Versión | Fecha | Descripción del cambio | Autor |
 |------|--------|----------------------------------|------------|
 | 2.0 | Octubre 2026 | Versión final del documento para la Evaluación Parcial 2. Refleja la implementación completa: catálogo, carrito, sesión, checkout, panel administrativo y pruebas unitarias. | Vicente Mendoza |
+| 2.1 | Octubre 2026 | Revisión de afirmaciones: la trazabilidad se ajusta a lo que verifican las pruebas, los requisitos RNF-09, RNF-10 y RNF-11 se acotan a lo comprobado y se referencia `docs/Documento-Testing`. Sin cambios de funcionalidad. | Vicente Mendoza |
 
 # 9. Anexo: resumen de la implementación
 
