@@ -1,6 +1,6 @@
 # Fuma · Tienda de ropa
 
-Tienda online de ropa desarrollada con React para la Evaluación Parcial 2 de DSY1104 (Desarrollo Fullstack II). Es una aplicación solo de frontend: los datos se simulan y se guardan en el navegador con `localStorage` (no hay backend).
+Tienda online de ropa desarrollada con React para la Evaluación Parcial 2 de DSY1104 (Desarrollo Fullstack II). En la Evaluación Parcial 3 el frontend se conecta por `fetch` a un backend en Spring Boot con MySQL (repositorio `trabajo-DESARROLLO-FULLSTACK-II_001D-backend`). Las partes que ya usan la API son el catálogo y el inicio de sesión; el checkout y el panel de administración se conectan en la fase siguiente.
 
 ## Funcionalidades
 - Catálogo con búsqueda por nombre, categorías, ofertas y detalle de producto.
@@ -20,6 +20,7 @@ Tienda online de ropa desarrollada con React para la Evaluación Parcial 2 de DS
 
 ## Requisitos
 - Node.js 18 o superior
+- El backend corriendo en `http://localhost:8080` (ver su README). La dirección se configura en el archivo `.env` (`VITE_API_URL`)
 - Google Chrome (o Chromium) para las pruebas
 
 ## Instalación y ejecución
@@ -34,14 +35,22 @@ npm run test:coverage  # pruebas con informe de cobertura
 Si Karma no encuentra Chrome, define la variable `CHROME_BIN` con la ruta del ejecutable.
 
 ## Datos de prueba
+Los usuarios viven en la base de datos del backend (con la contraseña cifrada); el frontend ya no guarda ninguna contraseña.
+
 | Rol | Correo | Contraseña |
 |---|---|---|
 | Cliente | `cliente@fuma.cl` | `cliente123` |
+| Vendedor | `vendedor@fuma.cl` | `vendedor123` |
 | Administrador | `admin@fuma.cl` | `admin123` |
 
 El pago es simulado: una tarjeta de 16 dígitos que empieza con `0000` es rechazada; cualquier otra tarjeta válida (por ejemplo `4111 1111 1111 1111`) es aprobada.
 
 Para volver a los datos iniciales, ejecuta `localStorage.clear()` en la consola del navegador y recarga la página.
+
+## Conexión con el backend y sesión
+- `src/services/api.js`: único lugar con `fetch`. Agrega el token (`Authorization: Bearer ...`) y convierte los errores del backend en un `ErrorApi` con su código y mensaje.
+- `src/hooks/useCargar.js` y `src/components/EstadoCarga.jsx`: cargan datos de la API y muestran "Cargando..." o el error.
+- `src/context/AuthContext.jsx`: inicia sesión con `POST /auth/login` y guarda **solo el token** en `localStorage`. Al recargar la página valida el token con `GET /auth/me`, y mientras la sesión está activa lo renueva cada 20 minutos con `POST /auth/refresh`. Si el backend responde 401, la sesión se cierra.
 
 ## Rutas
 | Ruta | Página |

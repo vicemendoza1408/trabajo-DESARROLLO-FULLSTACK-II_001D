@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { ROLES } from "../utils/constantes.js";
 
 // Barra de navegación responsiva de Fuma.
 // Props:
@@ -65,7 +66,7 @@ export default function BarraNavegacion({ cantidadCarrito, usuario = null, onCer
               </li>
             ) : (
               <>
-                {usuario.rol === "admin" && (
+                {usuario.rol === ROLES.ADMIN && (
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/admin" onClick={cerrarMenu}>Administración</NavLink>
                   </li>

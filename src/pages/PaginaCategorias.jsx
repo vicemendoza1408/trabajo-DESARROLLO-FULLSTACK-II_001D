@@ -1,26 +1,33 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
+import EstadoCarga from "../components/EstadoCarga.jsx";
 import FiltroCategorias from "../components/FiltroCategorias.jsx";
 import ListaProductos from "../components/ListaProductos.jsx";
 import { useCarrito } from "../context/CarritoContext.jsx";
-import { obtenerProductos } from "../data/baseDeDatos.js";
-import { CATEGORIAS_INICIALES } from "../data/datosIniciales.js";
-import { filtrarPorCategoria } from "../utils/filtros.js";
+import { useCargar } from "../hooks/useCargar.js";
+import { apiCategorias, apiProductos } from "../services/api.js";
 
-// Productos separados por categoría. La categoría llega en la URL (/categorias/:idCategoria). Los productos se leen una sola vez al abrir la página.
+// Productos separados por categoría. La categoría llega en la URL (/categorias/:idCategoria).
+// El filtro lo hace el backend (GET /productos?idCategoria=...), y las categorías también vienen de la API.
 export default function PaginaCategorias() {
   const { idCategoria } = useParams();
-  const [productos] = useState(() => obtenerProductos());
   const { agregarAlCarrito } = useCarrito();
 
-  const categoriaActual = CATEGORIAS_INICIALES.find((categoria) => categoria.id === idCategoria);
-  const productosDeCategoria = filtrarPorCategoria(productos, idCategoria);
+  // Se piden las dos cosas juntas; se vuelve a pedir cada vez que cambia la categoría de la URL.
+  const { datos, cargando, error } = useCargar(
+    () => Promise.all([apiCategorias(), apiProductos({ idCategoria })]),
+    [idCategoria]
+  );
+  const [categorias, productos] = datos ?? [[], []];
+
+  const categoriaActual = categorias.find((categoria) => categoria.id === idCategoria);
 
   return (
     <div className="container py-5">
       <h1 className="h2 fw-bold mb-4">{categoriaActual ? categoriaActual.nombre : "Categorías"}</h1>
-      <FiltroCategorias categorias={CATEGORIAS_INICIALES} categoriaActivaId={idCategoria} />
-      <ListaProductos productos={productosDeCategoria} onAgregarAlCarrito={agregarAlCarrito} />
+      <EstadoCarga cargando={cargando} error={error}>
+        <FiltroCategorias categorias={categorias} categoriaActivaId={idCategoria} />
+        <ListaProductos productos={productos} onAgregarAlCarrito={agregarAlCarrito} />
+      </EstadoCarga>
     </div>
   );
 }
