@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import FormularioLogin from "../components/FormularioLogin.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
-import { ROLES } from "../utils/constantes.js";
+import { rutaInicioPorRol } from "../utils/roles.js";
 
-// Página de inicio de sesión. Al entrar, el administrador va al panel y el resto a la tienda.
+// Página de inicio de sesión. Al entrar, cada rol va a su página: el administrador al panel,
+// el vendedor a las boletas y el cliente a la tienda. Si la persona venía de una página protegida
+// (por ejemplo el checkout), vuelve a ella.
 export default function PaginaLogin() {
   const { iniciarSesion } = useAuth();
   const navigate = useNavigate();
+  const ubicacion = useLocation();
   const [mensajeError, setMensajeError] = useState("");
 
   async function manejarInicioSesion(correo, contrasena) {
@@ -20,7 +23,7 @@ export default function PaginaLogin() {
       // Pregunta al backend. Si las credenciales son incorrectas, lanza un error con su mensaje.
       const usuarioIniciado = await iniciarSesion(correo, contrasena);
       setMensajeError("");
-      navigate(usuarioIniciado.rol === ROLES.ADMIN ? "/admin" : "/");
+      navigate(ubicacion.state?.desde ?? rutaInicioPorRol(usuarioIniciado.rol));
     } catch (error) {
       setMensajeError(error.message);
     }

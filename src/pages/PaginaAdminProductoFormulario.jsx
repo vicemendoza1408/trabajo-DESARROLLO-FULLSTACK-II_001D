@@ -1,16 +1,27 @@
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import AlertaMensaje from "../components/AlertaMensaje.jsx";
+import EstadoCarga from "../components/EstadoCarga.jsx";
 import FormularioProducto from "../components/FormularioProducto.jsx";
-import { actualizarProducto, crearProducto, obtenerProductoPorId } from "../data/baseDeDatos.js";
-import { CATEGORIAS_INICIALES } from "../data/datosIniciales.js";
+import { useCargar } from "../hooks/useCargar.js";
+import { apiActualizarProducto, apiCategorias, apiCrearProducto, apiProducto } from "../services/api.js";
 
 // Crear o editar un producto. Sin id en la URL = producto nuevo; con id = edición.
 export default function PaginaAdminProductoFormulario() {
   const { id } = useParams();
   const navigate = useNavigate();
   const esEdicion = id !== undefined;
-  const productoActual = esEdicion ? obtenerProductoPorId(Number(id)) : null;
+  const [mensajeError, setMensajeError] = useState("");
+  const [erroresServidor, setErroresServidor] = useState({});
 
-  if (esEdicion && !productoActual) {
+  // Se piden las categorías (para el selector) y, si se edita, el producto actual.
+  const { datos, cargando, error } = useCargar(
+    () => Promise.all([apiCategorias(), esEdicion ? apiProducto(id) : Promise.resolve(null)]),
+    [id]
+  );
+  const [categorias, productoActual] = datos ?? [[], null];
+
+  if (error && error.estado === 404) {
     return (
       <div className="container py-5">
         <h1 className="h2 fw-bold">Producto no encontrado</h1>
@@ -19,19 +30,35 @@ export default function PaginaAdminProductoFormulario() {
     );
   }
 
-  function guardar(datosProducto) {
-    if (esEdicion) {
-      actualizarProducto(productoActual.id, datosProducto);
-    } else {
-      crearProducto(datosProducto);
+  async function guardar(datosProducto) {
+    setMensajeError("");
+    setErroresServidor({});
+    try {
+      if (esEdicion) {
+        await apiActualizarProducto(id, datosProducto);
+      } else {
+        await apiCrearProducto(datosProducto);
+      }
+      navigate("/admin");
+    } catch (errorApi) {
+      // El backend vuelve a validar: sus errores por campo se muestran junto a cada campo.
+      setErroresServidor(errorApi.errores ?? {});
+      setMensajeError(errorApi.message);
     }
-    navigate("/admin");
   }
 
   return (
     <div className="container py-5" style={{ maxWidth: "640px" }}>
       <h1 className="h2 fw-bold mb-4">{esEdicion ? "Editar producto" : "Nuevo producto"}</h1>
-      <FormularioProducto productoInicial={productoActual} categorias={CATEGORIAS_INICIALES} onGuardar={guardar} />
+      {mensajeError && <AlertaMensaje tipo="danger" mensaje={mensajeError} />}
+      <EstadoCarga cargando={cargando} error={error}>
+        <FormularioProducto
+          productoInicial={productoActual}
+          categorias={categorias}
+          onGuardar={guardar}
+          erroresServidor={erroresServidor}
+        />
+      </EstadoCarga>
     </div>
   );
 }

@@ -24,9 +24,12 @@ function valoresIniciales(producto) {
 //   productoInicial: producto a editar, o null para crear uno nuevo.
 //   categorias: lista de categorías disponibles.
 //   onGuardar: se llama con el producto ya normalizado (números como número).
-export default function FormularioProducto({ productoInicial = null, categorias, onGuardar }) {
+//   erroresServidor: errores por campo que devolvió el backend (por ejemplo { precio: "..." }).
+export default function FormularioProducto({ productoInicial = null, categorias, onGuardar, erroresServidor = {} }) {
   const [campos, setCampos] = useState(() => valoresIniciales(productoInicial));
-  const [errores, setErrores] = useState({});
+  const [erroresLocales, setErrores] = useState({});
+  // Primero se muestran los errores de la validación local y, si no hay, los que respondió el backend.
+  const errores = { ...erroresServidor, ...erroresLocales };
 
   function actualizarCampo(campo, valor) {
     setCampos((anteriores) => ({ ...anteriores, [campo]: valor }));

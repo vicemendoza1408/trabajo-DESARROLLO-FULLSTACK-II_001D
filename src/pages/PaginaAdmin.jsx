@@ -1,16 +1,32 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import AlertaMensaje from "../components/AlertaMensaje.jsx";
+import EstadoCarga from "../components/EstadoCarga.jsx";
 import TablaProductosAdmin from "../components/TablaProductosAdmin.jsx";
-import { eliminarProducto, obtenerProductos } from "../data/baseDeDatos.js";
+import { useCargar } from "../hooks/useCargar.js";
+import { apiCategorias, apiEliminarProducto, apiProductos } from "../services/api.js";
 
 // Panel de administración: lista de productos con acceso a crear, editar y eliminar.
-// La protección de la ruta la hace RutaAdmin en App.jsx.
+// La protección de la ruta la hace RutaProtegida en App.jsx.
 export default function PaginaAdmin() {
-  const [productos, setProductos] = useState(() => obtenerProductos());
+  // "version" sube cada vez que se elimina un producto, para volver a pedir la lista actualizada.
+  const [version, setVersion] = useState(0);
+  const [mensajeError, setMensajeError] = useState("");
+  const { datos, cargando, error } = useCargar(
+    () => Promise.all([apiProductos(), apiCategorias()]),
+    [version]
+  );
+  const [productos, categorias] = datos ?? [[], []];
 
-  function manejarEliminar(id) {
-    eliminarProducto(id);
-    setProductos(obtenerProductos());
+  async function manejarEliminar(id) {
+    setMensajeError("");
+    try {
+      await apiEliminarProducto(id);
+      setVersion((actual) => actual + 1);
+    } catch (errorApi) {
+      // Por ejemplo: "No se puede eliminar el producto porque ya tiene ventas registradas."
+      setMensajeError(errorApi.message);
+    }
   }
 
   return (
@@ -23,7 +39,10 @@ export default function PaginaAdmin() {
         <Link className="btn btn-dark" to="/admin/productos/nuevo">Nuevo producto</Link>
       </div>
 
-      <TablaProductosAdmin productos={productos} onEliminar={manejarEliminar} />
+      {mensajeError && <AlertaMensaje tipo="danger" mensaje={mensajeError} />}
+      <EstadoCarga cargando={cargando} error={error}>
+        <TablaProductosAdmin productos={productos} categorias={categorias} onEliminar={manejarEliminar} />
+      </EstadoCarga>
     </div>
   );
 }

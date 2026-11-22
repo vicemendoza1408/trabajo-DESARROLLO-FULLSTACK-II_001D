@@ -1,10 +1,7 @@
 // Constantes compartidas de la tienda. Centralizarlas evita valores "mágicos" repetidos.
 
 // Claves usadas en localStorage.
-export const CLAVE_PRODUCTOS = "fuma_productos";
-export const CLAVE_PEDIDOS = "fuma_pedidos";
 export const CLAVE_CARRITO = "fuma_carrito";
-export const CLAVE_SESION = "fuma_sesion";
 // Token JWT que entrega el backend al iniciar sesión. Es lo único que se guarda de la sesión.
 export const CLAVE_TOKEN = "fuma_token";
 
@@ -24,3 +21,6 @@ export const ROLES = {
 
 // Cada cuántos minutos se renueva el token mientras la app está abierta (el token dura 30 minutos).
 export const MINUTOS_RENOVACION_TOKEN = 20;
+
+// Evento que se avisa a toda la app cuando el backend responde 401 (el token venció o ya no sirve).
+export const EVENTO_SESION_EXPIRADA = "fuma:sesion-expirada";

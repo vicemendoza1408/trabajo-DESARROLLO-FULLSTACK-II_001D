@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiLogin, apiMe, apiRenovarToken, borrarToken, guardarToken, leerToken } from "../services/api.js";
-import { MINUTOS_RENOVACION_TOKEN, ROLES } from "../utils/constantes.js";
+import { EVENTO_SESION_EXPIRADA, MINUTOS_RENOVACION_TOKEN, ROLES } from "../utils/constantes.js";
 
 // Contexto de sesión: indica quién está conectado (cliente, vendedor o administrador).
 // De la sesión solo se guarda el TOKEN en el navegador. Los datos del usuario (y su rol)
@@ -48,6 +48,12 @@ export function AuthProvider({ children }) {
     return () => clearInterval(temporizador);
   }, [usuario]);
 
+  // 3) Si cualquier petición recibe un 401 (el token venció), api.js avisa con un evento y se cierra la sesión.
+  useEffect(() => {
+    window.addEventListener(EVENTO_SESION_EXPIRADA, cerrarSesion);
+    return () => window.removeEventListener(EVENTO_SESION_EXPIRADA, cerrarSesion);
+  }, []);
+
   // Inicia sesión en el backend. Si las credenciales son incorrectas, lanza un ErrorApi (401).
   async function iniciarSesion(correo, contrasena) {
     const respuesta = await apiLogin(correo, contrasena);
@@ -65,6 +71,7 @@ export function AuthProvider({ children }) {
     usuario,
     cargandoSesion,
     esAdmin: usuario !== null && usuario.rol === ROLES.ADMIN,
+    esVendedor: usuario !== null && usuario.rol === ROLES.VENDEDOR,
     iniciarSesion,
     cerrarSesion,
   };

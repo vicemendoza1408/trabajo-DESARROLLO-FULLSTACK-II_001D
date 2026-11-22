@@ -1,6 +1,6 @@
 // Servicio de comunicación con el backend (API REST de Spring Boot).
 // TODOS los fetch de la aplicación están en este archivo: el resto del código solo llama a estas funciones.
-import { CLAVE_TOKEN } from "../utils/constantes.js";
+import { CLAVE_TOKEN, EVENTO_SESION_EXPIRADA } from "../utils/constantes.js";
 
 // Dirección base de la API. Sale del archivo .env (VITE_API_URL); si no existe, usa la de desarrollo.
 const URL_API = import.meta.env?.VITE_API_URL ?? "http://localhost:8080/api/v1";
@@ -62,6 +62,13 @@ async function solicitar(ruta, { metodo = "GET", cuerpo } = {}) {
   }
 
   const datos = await respuesta.json().catch(() => null);
+
+  // 401 con un token guardado = el token venció o ya no es válido. Se avisa a la app para cerrar la sesión.
+  // (El login se excluye: ahí un 401 solo significa "correo o contraseña incorrectos".)
+  if (respuesta.status === 401 && token && ruta !== "/auth/login") {
+    window.dispatchEvent(new Event(EVENTO_SESION_EXPIRADA));
+  }
+
   if (!respuesta.ok) {
     throw new ErrorApi(respuesta.status, datos?.mensaje ?? "Ocurrió un error inesperado.", datos?.errores ?? {});
   }
@@ -107,3 +114,37 @@ export function apiProductos({ idCategoria, ofertas } = {}) {
 export function apiProducto(id) {
   return solicitar(`/productos/${id}`);
 }
+
+// ---------- Administración de productos (solo ADMIN) ----------
+// "datos" lleva: nombre, descripcion, precio, descuentoPorcentaje, idCategoria e imagen.
+
+export function apiCrearProducto(datos) {
+  return solicitar("/productos", { metodo: "POST", cuerpo: datos });
+}
+
+export function apiActualizarProducto(id, datos) {
+  return solicitar(`/productos/${id}`, { metodo: "PUT", cuerpo: datos });
+}
+
+export function apiEliminarProducto(id) {
+  return solicitar(`/productos/${id}`, { metodo: "DELETE" });
+}
+
+// ---------- Boletas (compras) ----------
+
+// Realiza una compra (CLIENTE o ADMIN). Se envían los datos del checkout y, por cada producto,
+// solo su id y la cantidad: el backend calcula los precios. Devuelve la boleta creada.
+export function apiCrearBoleta(datos) {
+  return solicitar("/boletas", { metodo: "POST", cuerpo: datos });
+}
+
+// Lista de todas las boletas (solo ADMIN y VENDEDOR).
+export function apiBoletas() {
+  return solicitar("/boletas");
+}
+
+// Detalle de una boleta. Un CLIENTE solo puede ver las suyas (si no, el backend responde 403).
+export function apiBoleta(id) {
+  return solicitar(`/boletas/${id}`);
+}
+

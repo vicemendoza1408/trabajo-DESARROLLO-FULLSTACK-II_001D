@@ -13,7 +13,14 @@ const DATOS_VACIOS = { nombre: "", correo: "", telefono: "", direccion: "", nume
 //   opcionEntrega: "retiro" o "despacho" (la decide la página, porque afecta el total).
 //   onCambiarEntrega: se llama con la nueva opción al elegir un radio.
 //   onConfirmar: se llama con los datos cuando el formulario es válido.
-export default function FormularioCheckout({ datosIniciales = {}, opcionEntrega, onCambiarEntrega, onConfirmar }) {
+//   enviando: true mientras se procesa la compra (desactiva el botón para no pagar dos veces).
+export default function FormularioCheckout({
+  datosIniciales = {},
+  opcionEntrega,
+  onCambiarEntrega,
+  onConfirmar,
+  enviando = false,
+}) {
   const [datos, setDatos] = useState(() => ({ ...DATOS_VACIOS, ...datosIniciales }));
   const [errores, setErrores] = useState({});
 
@@ -62,8 +69,8 @@ export default function FormularioCheckout({ datosIniciales = {}, opcionEntrega,
       <CampoFormulario etiqueta="Número de tarjeta" nombre="numeroTarjeta" valor={datos.numeroTarjeta}
         error={errores.numeroTarjeta} onCambiar={(valor) => actualizarCampo("numeroTarjeta", valor)} />
 
-      <button type="submit" className="btn btn-dark btn-lg w-100 mt-2">
-        Pagar
+      <button type="submit" className="btn btn-dark btn-lg w-100 mt-2" disabled={enviando}>
+        {enviando ? "Procesando..." : "Pagar"}
       </button>
     </form>
   );

@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { ROLES } from "../utils/constantes.js";
 
-// Barra de navegación responsiva de Fuma.
+// Barra de navegación responsiva de Fuma. El menú depende del rol:
+//   - Cliente o sin sesión: Productos, Categorías, Ofertas y Carrito.
+//   - Vendedor: solo Productos y Boletas (no ve la tienda, el carrito ni la administración).
+//   - Administrador: lo de la tienda, más Administración y Boletas.
 // Props:
 //   cantidadCarrito: número de ítems del carrito (insignia).
 //   usuario: usuario conectado, o null si nadie ha iniciado sesión.
@@ -24,12 +27,15 @@ export default function BarraNavegacion({ cantidadCarrito, usuario = null, onCer
     onCerrarSesion();
   }
 
+  const esVendedor = usuario !== null && usuario.rol === ROLES.VENDEDOR;
+  const esAdmin = usuario !== null && usuario.rol === ROLES.ADMIN;
+
   const claseColapso = menuAbierto ? "navbar-collapse collapse show" : "navbar-collapse collapse";
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark fuma-navbar">
       <div className="container">
-        <Link className="navbar-brand fw-bold" to="/" onClick={cerrarMenu}>
+        <Link className="navbar-brand fw-bold" to={esVendedor ? "/boletas" : "/"} onClick={cerrarMenu}>
           Fuma
         </Link>
 
@@ -45,20 +51,33 @@ export default function BarraNavegacion({ cantidadCarrito, usuario = null, onCer
 
         <div className={claseColapso}>
           <ul className="navbar-nav ms-auto align-items-lg-center">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/productos" onClick={cerrarMenu}>Productos</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/categorias" onClick={cerrarMenu}>Categorías</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/ofertas" onClick={cerrarMenu}>Ofertas</NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/carrito" onClick={cerrarMenu}>
-                Carrito <span className="badge bg-warning text-dark">{cantidadCarrito}</span>
-              </NavLink>
-            </li>
+            {esVendedor ? (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/vendedor/productos" onClick={cerrarMenu}>Productos</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/boletas" onClick={cerrarMenu}>Boletas</NavLink>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/productos" onClick={cerrarMenu}>Productos</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/categorias" onClick={cerrarMenu}>Categorías</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/ofertas" onClick={cerrarMenu}>Ofertas</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/carrito" onClick={cerrarMenu}>
+                    Carrito <span className="badge bg-warning text-dark">{cantidadCarrito}</span>
+                  </NavLink>
+                </li>
+              </>
+            )}
 
             {usuario === null ? (
               <li className="nav-item">
@@ -66,10 +85,15 @@ export default function BarraNavegacion({ cantidadCarrito, usuario = null, onCer
               </li>
             ) : (
               <>
-                {usuario.rol === ROLES.ADMIN && (
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/admin" onClick={cerrarMenu}>Administración</NavLink>
-                  </li>
+                {esAdmin && (
+                  <>
+                    <li className="nav-item">
+                      <NavLink className="nav-link" to="/admin" onClick={cerrarMenu}>Administración</NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link" to="/boletas" onClick={cerrarMenu}>Boletas</NavLink>
+                    </li>
+                  </>
                 )}
                 <li className="nav-item">
                   <span className="nav-link">Hola, {usuario.nombre}</span>

@@ -1,13 +1,15 @@
 # Fuma · Tienda de ropa
 
-Tienda online de ropa desarrollada con React para la Evaluación Parcial 2 de DSY1104 (Desarrollo Fullstack II). En la Evaluación Parcial 3 el frontend se conecta por `fetch` a un backend en Spring Boot con MySQL (repositorio `trabajo-DESARROLLO-FULLSTACK-II_001D-backend`). Las partes que ya usan la API son el catálogo y el inicio de sesión; el checkout y el panel de administración se conectan en la fase siguiente.
+Tienda online de ropa desarrollada con React para la Evaluación Parcial 2 de DSY1104 (Desarrollo Fullstack II). En la Evaluación Parcial 3 el frontend se conecta por `fetch` a un backend en Spring Boot con MySQL (repositorio `trabajo-DESARROLLO-FULLSTACK-II_001D-backend`). Todos los datos (productos, categorías, usuarios y boletas) vienen del backend.
 
 ## Funcionalidades
 - Catálogo con búsqueda por nombre, categorías, ofertas y detalle de producto.
 - Carrito de compras (agregar, cambiar cantidad, eliminar, vaciar) que se conserva al recargar.
-- Inicio de sesión simulado para cliente y administrador.
-- Checkout con validación, retiro en tienda o despacho, pago simulado y página de compra exitosa o fallida.
-- Panel de administración protegido: crear, editar y eliminar productos (CRUD).
+- Inicio de sesión con JWT para tres roles (cliente, vendedor y administrador) y sesión que se conserva al recargar.
+- Checkout con validación, retiro en tienda o despacho, pago simulado en el backend y página de compra exitosa o fallida.
+- Panel de administración protegido: crear, editar y eliminar productos (CRUD) con la API.
+- Vista del vendedor: productos y boletas en modo consulta (lista y detalle).
+- Restricciones por rol: cada rol ve solo su menú y sus páginas; el backend rechaza lo demás (401 y 403).
 - Diseño responsivo con Bootstrap (móvil, tablet y escritorio).
 
 ## Tecnologías
@@ -16,7 +18,7 @@ Tienda online de ropa desarrollada con React para la Evaluación Parcial 2 de DS
 - Bootstrap 5 (diseño responsivo)
 - Jasmine + Karma + Testing Library (pruebas unitarias)
 - Istanbul (cobertura)
-- Datos simulados con `localStorage`
+- `fetch` para consumir la API REST del backend (JWT en `localStorage`)
 
 ## Requisitos
 - Node.js 18 o superior
@@ -45,25 +47,30 @@ Los usuarios viven en la base de datos del backend (con la contraseña cifrada);
 
 El pago es simulado: una tarjeta de 16 dígitos que empieza con `0000` es rechazada; cualquier otra tarjeta válida (por ejemplo `4111 1111 1111 1111`) es aprobada.
 
-Para volver a los datos iniciales, ejecuta `localStorage.clear()` en la consola del navegador y recarga la página.
+El carrito y el token de la sesión se guardan en `localStorage`; para empezar de cero, ejecuta `localStorage.clear()` en la consola del navegador y recarga la página.
 
 ## Conexión con el backend y sesión
 - `src/services/api.js`: único lugar con `fetch`. Agrega el token (`Authorization: Bearer ...`) y convierte los errores del backend en un `ErrorApi` con su código y mensaje.
 - `src/hooks/useCargar.js` y `src/components/EstadoCarga.jsx`: cargan datos de la API y muestran "Cargando..." o el error.
 - `src/context/AuthContext.jsx`: inicia sesión con `POST /auth/login` y guarda **solo el token** en `localStorage`. Al recargar la página valida el token con `GET /auth/me`, y mientras la sesión está activa lo renueva cada 20 minutos con `POST /auth/refresh`. Si el backend responde 401, la sesión se cierra.
 
-## Rutas
-| Ruta | Página |
-|---|---|
-| `/` | Inicio |
-| `/productos` y `/productos/:id` | Catálogo y detalle |
-| `/categorias` y `/categorias/:idCategoria` | Productos por categoría |
-| `/ofertas` | Productos con descuento |
-| `/carrito` | Carrito |
-| `/checkout` | Finalizar compra |
-| `/compra-exitosa/:idPedido` y `/compra-fallida` | Resultado del pago |
-| `/login` | Inicio de sesión |
-| `/admin`, `/admin/productos/nuevo` y `/admin/productos/:id/editar` | Panel de administración (solo administrador) |
+## Rutas y permisos
+| Ruta | Página | Quién puede entrar |
+|---|---|---|
+| `/` | Inicio | Todos |
+| `/productos` y `/productos/:id` | Catálogo y detalle | Todos |
+| `/categorias` y `/categorias/:idCategoria` | Productos por categoría | Todos |
+| `/ofertas` | Productos con descuento | Todos |
+| `/carrito` | Carrito | Todos |
+| `/login` | Inicio de sesión | Todos |
+| `/checkout` y `/compra-exitosa/:idPedido` | Finalizar compra y confirmación | Cliente y administrador (con sesión) |
+| `/compra-fallida` | Pago rechazado | Todos |
+| `/admin`, `/admin/productos/nuevo` y `/admin/productos/:id/editar` | Administración de productos | Administrador |
+| `/boletas` y `/boletas/:id` | Lista y detalle de boletas | Vendedor y administrador |
+| `/vendedor/productos` y `/vendedor/productos/:id` | Productos en modo consulta | Vendedor y administrador |
+
+Las rutas protegidas usan `RutaProtegida`: sin sesión llevan al login; con otro rol muestran "Sin permiso". El menú de la barra también cambia según el rol
+(el vendedor solo ve *Productos* y *Boletas*). Esto es comodidad para el usuario: la seguridad real la aplica el backend con los códigos 401 y 403.
 
 ## Estructura
 ```
@@ -73,8 +80,9 @@ src/
 ├── components/     piezas reutilizables
 ├── pages/          una página por ruta
 ├── context/        estado global (carrito, sesión)
-├── data/           datos iniciales y CRUD sobre localStorage
-├── utils/          lógica pura (precios, carrito, validaciones, filtros, pago)
+├── services/       api.js: todas las llamadas al backend (fetch)
+├── hooks/          useCargar: carga datos de la API con estados de carga y error
+├── utils/          lógica pura (precios, carrito, validaciones, filtros, roles, fechas)
 ├── styles/         variables y estilos globales
 └── tests/          pruebas (*.spec.js y *.spec.jsx)
 ```
