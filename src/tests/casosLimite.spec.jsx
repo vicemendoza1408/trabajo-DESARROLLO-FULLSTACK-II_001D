@@ -1,15 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 import FormularioCheckout from "../components/FormularioCheckout.jsx";
-import { AuthProvider } from "../context/AuthContext.jsx";
 import { CarritoProvider, useCarrito } from "../context/CarritoContext.jsx";
-import { obtenerProductos } from "../data/baseDeDatos.js";
-import PaginaAdmin from "../pages/PaginaAdmin.jsx";
-import PaginaCompraExitosa from "../pages/PaginaCompraExitosa.jsx";
-import PaginaDetalleProducto from "../pages/PaginaDetalleProducto.jsx";
-import { CLAVE_CARRITO, CLAVE_SESION } from "../utils/constantes.js";
+import { CLAVE_CARRITO } from "../utils/constantes.js";
 
-// Casos límite: ramas alternativas (elementos que no existen, opciones no usadas, acciones secundarias).
+// Casos límite: acciones secundarias del carrito y opciones del checkout que otras pruebas no recorren.
+// (Los casos de "no encontrado", error de la API y acceso denegado están en las pruebas de cada página.)
 
 // Componente de prueba con botones para las acciones del carrito que no cubren otras pruebas.
 function AccionesCarritoDePrueba() {
@@ -64,60 +59,5 @@ describe("FormularioCheckout (elegir despacho)", () => {
     fireEvent.click(screen.getByLabelText("Despacho a domicilio"));
 
     expect(espiaEntrega).toHaveBeenCalledWith("despacho");
-  });
-});
-
-describe("páginas con datos que no existen", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-  });
-
-  it("muestra 'Producto no encontrado' para un id inexistente", () => {
-    render(
-      <MemoryRouter initialEntries={["/productos/999"]}>
-        <CarritoProvider>
-          <Routes>
-            <Route path="/productos/:id" element={<PaginaDetalleProducto />} />
-          </Routes>
-        </CarritoProvider>
-      </MemoryRouter>
-    );
-    expect(screen.getByRole("heading", { name: "Producto no encontrado" })).toBeTruthy();
-  });
-
-  it("muestra 'Pedido no encontrado' para un pedido inexistente", () => {
-    render(
-      <MemoryRouter initialEntries={["/compra-exitosa/999"]}>
-        <Routes>
-          <Route path="/compra-exitosa/:idPedido" element={<PaginaCompraExitosa />} />
-        </Routes>
-      </MemoryRouter>
-    );
-    expect(screen.getByRole("heading", { name: "Pedido no encontrado" })).toBeTruthy();
-  });
-});
-
-describe("PaginaAdmin (eliminar desde el panel)", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-    window.localStorage.setItem(CLAVE_SESION, JSON.stringify({ id: 2, nombre: "Admin", rol: "admin" }));
-  });
-
-  // Eliminar confirmado: el producto desaparece de la base de datos y de la tabla.
-  it("elimina el producto de la base de datos cuando el usuario confirma", () => {
-    spyOn(window, "confirm").and.returnValue(true);
-    const cantidadAntes = obtenerProductos().length;
-
-    render(
-      <MemoryRouter>
-        <AuthProvider>
-          <PaginaAdmin />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-    fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
-
-    expect(obtenerProductos().length).toBe(cantidadAntes - 1);
-    expect(screen.getByText(`${cantidadAntes - 1} productos en el catálogo`)).toBeTruthy();
   });
 });

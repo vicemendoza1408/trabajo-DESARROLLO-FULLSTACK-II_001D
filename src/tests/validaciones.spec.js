@@ -1,7 +1,7 @@
 import { validarDatosCheckout } from "../utils/validaciones.js";
-import { pagoEsAprobado } from "../utils/pago.js";
 
-// Pruebas de validación del checkout y del pago simulado.
+// Pruebas de validación del formulario de checkout.
+// (La aprobación del pago ya no se prueba aquí: la decide el backend y la cubren BoletaServiceTest y checkout.spec.)
 describe("validarDatosCheckout", () => {
   const datosCorrectos = {
     nombre: "Vicente",
@@ -38,15 +38,5 @@ describe("validarDatosCheckout", () => {
     const conRetiro = validarDatosCheckout({ ...datosCorrectos, direccion: "", opcionEntrega: "retiro" });
     expect(conDespacho.direccion).toBeDefined();
     expect(conRetiro.direccion).toBeUndefined();
-  });
-});
-
-describe("pagoEsAprobado", () => {
-  it("aprueba una tarjeta de 16 dígitos que no empieza con 0000", () => {
-    expect(pagoEsAprobado("4111 1111 1111 1111")).toBe(true);
-  });
-
-  it("rechaza tarjetas que empiezan con 0000", () => {
-    expect(pagoEsAprobado("0000111122223333")).toBe(false);
   });
 });

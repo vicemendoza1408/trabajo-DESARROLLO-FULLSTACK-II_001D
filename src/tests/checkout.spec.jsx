@@ -1,17 +1,17 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import FormularioCheckout from "../components/FormularioCheckout.jsx";
+import RutaProtegida from "../components/RutaProtegida.jsx";
 import { AuthProvider } from "../context/AuthContext.jsx";
 import { CarritoProvider } from "../context/CarritoContext.jsx";
-import { obtenerPedidos } from "../data/baseDeDatos.js";
 import PaginaCheckout from "../pages/PaginaCheckout.jsx";
-import PaginaCompraExitosa from "../pages/PaginaCompraExitosa.jsx";
 import PaginaCompraFallida from "../pages/PaginaCompraFallida.jsx";
-import { CLAVE_CARRITO, CLAVE_SESION } from "../utils/constantes.js";
+import { CLAVE_CARRITO, CLAVE_TOKEN, ROLES } from "../utils/constantes.js";
+import { BOLETA, USUARIO_CLIENTE, fallo, llamadasA, ok, simularApi } from "./ayudas.js";
 
 // Un producto en el carrito para las pruebas del checkout.
 const CARRITO_DE_PRUEBA = [
-  { idProducto: 3, nombre: "Polera blanca", imagen: "/img/placeholder.svg", precioUnitario: 9990, cantidad: 1 },
+  { idProducto: 2, nombre: "Polera blanca", imagen: "/img/placeholder.svg", precioUnitario: 7992, cantidad: 2 },
 ];
 
 // Llena el formulario con datos válidos. La tarjeta es la que se quiere probar.
@@ -72,57 +72,97 @@ describe("FormularioCheckout", () => {
   });
 });
 
-// Pruebas de la página completa: autocompletado, pago rechazado y pago aprobado.
+// Pruebas de la página completa: autocompletado, compra aprobada, pago rechazado y errores del backend.
+// El pago ya no se decide en el frontend: lo decide el backend (POST /boletas) y aquí se simula su respuesta.
 describe("PaginaCheckout (flujo de compra)", () => {
   beforeEach(() => {
     window.localStorage.clear();
     window.localStorage.setItem(CLAVE_CARRITO, JSON.stringify(CARRITO_DE_PRUEBA));
+    window.localStorage.setItem(CLAVE_TOKEN, "token-cliente");
   });
 
-  function renderizarFlujo() {
-    return render(
+  // Se simula la sesión del cliente (GET /auth/me) y la respuesta del backend a la compra.
+  function renderizarFlujo(respuestaCompra) {
+    const espia = simularApi({ "GET /auth/me": ok(USUARIO_CLIENTE), "POST /boletas": respuestaCompra });
+    render(
       <MemoryRouter initialEntries={["/checkout"]}>
         <AuthProvider>
           <CarritoProvider>
             <Routes>
-              <Route path="/checkout" element={<PaginaCheckout />} />
+              <Route path="/checkout" element={<RutaProtegida roles={[ROLES.CLIENTE]}><PaginaCheckout /></RutaProtegida>} />
               <Route path="/compra-fallida" element={<PaginaCompraFallida />} />
-              <Route path="/compra-exitosa/:idPedido" element={<PaginaCompraExitosa />} />
+              <Route path="/compra-exitosa/:idPedido" element={<h1>¡Compra exitosa!</h1>} />
             </Routes>
           </CarritoProvider>
         </AuthProvider>
       </MemoryRouter>
     );
+    return espia;
   }
 
-  // Autocompletado: con sesión iniciada, el nombre llega desde el usuario conectado.
-  it("autocompleta el nombre con el usuario que tiene la sesión iniciada", () => {
-    window.localStorage.setItem(
-      CLAVE_SESION,
-      JSON.stringify({ id: 1, nombre: "Cliente Demo", correo: "cliente@fuma.cl", telefono: "912345678", direccion: "Av. Principal 123", rol: "cliente" })
-    );
-    renderizarFlujo();
+  // Autocompletado: el nombre llega desde el usuario que entregó el backend.
+  it("autocompleta el nombre con el usuario que tiene la sesión iniciada", async () => {
+    renderizarFlujo(ok(BOLETA, 201));
 
-    expect(screen.getByLabelText("Nombre").value).toBe("Cliente Demo");
+    const campoNombre = await screen.findByLabelText("Nombre");
+
+    expect(campoNombre.value).toBe("Cliente Demo");
   });
 
-  // Pago rechazado: una tarjeta que empieza con 0000 lleva a la página de compra fallida.
-  it("lleva a compra fallida cuando el pago es rechazado", () => {
-    renderizarFlujo();
-    llenarFormulario("0000 1111 2222 3333");
-    fireEvent.click(screen.getByRole("button", { name: "Pagar" }));
+  // Compra aprobada: el backend responde 201, el carrito se vacía y se va a la boleta.
+  it("crea la boleta, vacía el carrito y muestra la compra exitosa", async () => {
+    renderizarFlujo(ok(BOLETA, 201));
+    await screen.findByLabelText("Nombre");
 
-    expect(screen.getByRole("heading", { name: "No se pudo completar el pago" })).toBeTruthy();
-  });
-
-  // Pago aprobado: se crea el pedido, se vacía el carrito y se muestra la compra exitosa.
-  it("crea el pedido, vacía el carrito y muestra la compra exitosa", () => {
-    renderizarFlujo();
     llenarFormulario("4111 1111 1111 1111");
     fireEvent.click(screen.getByRole("button", { name: "Pagar" }));
 
-    expect(screen.getByRole("heading", { name: "¡Compra exitosa!" })).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: "¡Compra exitosa!" })).toBeTruthy();
     expect(JSON.parse(window.localStorage.getItem(CLAVE_CARRITO))).toEqual([]);
-    expect(obtenerPedidos().length).toBe(1);
+  });
+
+  // Seguridad: del carrito solo viajan el id y la cantidad; los precios los pone el backend.
+  it("envía solo el id y la cantidad de cada producto, sin precios", async () => {
+    const espia = renderizarFlujo(ok(BOLETA, 201));
+    await screen.findByLabelText("Nombre");
+
+    llenarFormulario("4111 1111 1111 1111");
+    fireEvent.click(screen.getByRole("button", { name: "Pagar" }));
+    await screen.findByRole("heading", { name: "¡Compra exitosa!" });
+
+    const enviado = llamadasA(espia, "POST /boletas")[0];
+    expect(enviado.cuerpo.items).toEqual([{ idProducto: 2, cantidad: 2 }]);
+    expect(enviado.cabeceras.Authorization).toBe("Bearer token-cliente");
+  });
+
+  // Pago rechazado: el backend responde 402 y el carrito se conserva para reintentar.
+  it("lleva a compra fallida cuando el backend rechaza el pago (402)", async () => {
+    renderizarFlujo(fallo(402, "El pago fue rechazado."));
+    await screen.findByLabelText("Nombre");
+
+    llenarFormulario("0000 1111 2222 3333");
+    fireEvent.click(screen.getByRole("button", { name: "Pagar" }));
+
+    expect(await screen.findByRole("heading", { name: "No se pudo completar el pago" })).toBeTruthy();
+    expect(JSON.parse(window.localStorage.getItem(CLAVE_CARRITO)).length).toBe(1);
+  });
+
+  // Otros errores (por ejemplo, un producto que ya no existe) se muestran en la misma página.
+  it("muestra el error del backend y mantiene el carrito cuando la compra falla", async () => {
+    renderizarFlujo(fallo(404, "El producto 2 no existe."));
+    await screen.findByLabelText("Nombre");
+
+    llenarFormulario("4111 1111 1111 1111");
+    fireEvent.click(screen.getByRole("button", { name: "Pagar" }));
+
+    expect((await screen.findByRole("alert")).textContent).toBe("El producto 2 no existe.");
+    expect(JSON.parse(window.localStorage.getItem(CLAVE_CARRITO)).length).toBe(1);
+  });
+
+  it("muestra que el carrito está vacío cuando no hay productos", async () => {
+    window.localStorage.setItem(CLAVE_CARRITO, JSON.stringify([]));
+    renderizarFlujo(ok(BOLETA, 201));
+
+    expect(await screen.findByRole("heading", { name: "Tu carrito está vacío" })).toBeTruthy();
   });
 });

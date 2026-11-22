@@ -88,7 +88,22 @@ src/
 ```
 
 ## Pruebas
-Hay 93 pruebas unitarias en 17 archivos. Karma carga todos los archivos `*.spec.js` y `*.spec.jsx` de `src/tests/`; para agregar una prueba basta con crear un archivo con ese nombre.
+Hay 162 pruebas unitarias en 21 archivos. Karma carga todos los archivos `*.spec.js` y `*.spec.jsx` de `src/tests/`; para agregar una prueba basta con crear un archivo con ese nombre.
+
+Las pruebas **no necesitan el backend encendido**: `src/tests/ayudas.js` reemplaza `fetch` por una versión falsa (`simularApi`) que responde lo que cada prueba indica. Así se prueban las páginas, `services/api.js` y la sesión completos, incluyendo los errores 400, 401, 402, 403 y 404 y el caso de backend apagado.
+
+| Archivo | Qué prueba |
+|---|---|
+| `api.spec.js` | La capa `fetch`: rutas, token Bearer, 204, `ErrorApi`, error de red y evento de sesión vencida |
+| `authContext.spec.jsx` | Login, token en localStorage, sesión al recargar (`/auth/me`), vencimiento y renovación |
+| `rutaProtegida.spec.jsx` | Protección por rol: sin sesión, rol permitido, rol no permitido, recarga con token |
+| `rutas.spec.jsx` | La app completa por rol (cliente, vendedor, administrador) |
+| `login.spec.jsx`, `checkout.spec.jsx` | Formularios y flujos de login y compra (pago aprobado, 402, errores) |
+| `paginasCatalogo.spec.jsx` | Productos, categorías, ofertas y detalle con datos de la API |
+| `adminCrud.spec.jsx` | Panel del administrador: listar, crear, editar y eliminar (incluye producto con ventas) |
+| `boletas.spec.jsx`, `vendedor.spec.jsx` | Boletas (lista, detalle, compra exitosa, 403) y vista del vendedor |
+| `carga.spec.jsx` | `useCargar` y `EstadoCarga` |
+| Resto | Lógica pura (precios, carrito, filtros, validaciones) y componentes de la tienda |
 
 ## Documentación
 - `docs/ERS-V2.md` y `docs/ERS-V2.docx`: especificación de requisitos de software (versión 2).

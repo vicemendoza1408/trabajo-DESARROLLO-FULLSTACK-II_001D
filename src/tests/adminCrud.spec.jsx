@@ -1,44 +1,41 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import FormularioProducto from "../components/FormularioProducto.jsx";
-import RutaAdmin from "../components/RutaAdmin.jsx";
 import TablaProductosAdmin from "../components/TablaProductosAdmin.jsx";
-import { AuthProvider } from "../context/AuthContext.jsx";
-import { actualizarProducto, obtenerProductoPorId, obtenerProductos } from "../data/baseDeDatos.js";
-import { CATEGORIAS_INICIALES } from "../data/datosIniciales.js";
 import PaginaAdmin from "../pages/PaginaAdmin.jsx";
 import PaginaAdminProductoFormulario from "../pages/PaginaAdminProductoFormulario.jsx";
-import { CLAVE_SESION } from "../utils/constantes.js";
+import { CATEGORIAS, PRODUCTOS, fallo, llamadasA, ok, simularApi } from "./ayudas.js";
 
-// Sesión de administrador para las pruebas que la necesitan.
-const SESION_ADMIN = { id: 2, nombre: "Administrador Fuma", correo: "admin@fuma.cl", rol: "admin" };
-
-const PRODUCTOS_DE_PRUEBA = [
-  { id: 1, nombre: "Polerón negro", descripcion: "Algodón", precio: 29990, descuentoPorcentaje: 0, idCategoria: "polerones", imagen: "/img/placeholder.svg" },
-  { id: 2, nombre: "Gorro de lana", descripcion: "Talla única", precio: 6990, descuentoPorcentaje: 10, idCategoria: "accesorios", imagen: "/img/placeholder.svg" },
-];
-
-// Pruebas de la tabla del panel: renderizado, eventos y confirmación antes de eliminar.
+// Pruebas de la tabla del panel: renderizado, eventos, confirmación antes de eliminar y modo solo lectura.
 describe("TablaProductosAdmin", () => {
-  // Renderizado de lista: una fila por producto, más el encabezado.
-  it("muestra una fila por producto más el encabezado", () => {
-    render(
+  function renderizarTabla(propiedades) {
+    return render(
       <MemoryRouter>
-        <TablaProductosAdmin productos={PRODUCTOS_DE_PRUEBA} onEliminar={() => {}} />
+        <TablaProductosAdmin productos={PRODUCTOS} categorias={CATEGORIAS} {...propiedades} />
       </MemoryRouter>
     );
-    expect(screen.getAllByRole("row").length).toBe(PRODUCTOS_DE_PRUEBA.length + 1);
+  }
+
+  // Renderizado de lista: una fila por producto, más el encabezado.
+  it("muestra una fila por producto más el encabezado", () => {
+    renderizarTabla({ onEliminar: () => {} });
+
+    expect(screen.getAllByRole("row").length).toBe(PRODUCTOS.length + 1);
+  });
+
+  // La tabla recibe las categorías para mostrar su nombre en vez del id.
+  it("muestra el nombre de la categoría de cada producto", () => {
+    renderizarTabla({ onEliminar: () => {} });
+
+    expect(screen.getAllByText("Accesorios").length).toBe(2);
+    expect(screen.getByText("Polerones")).toBeTruthy();
   });
 
   // Mock de confirm: si el usuario acepta, se llama a onEliminar con el id.
   it("elimina el producto solo cuando el usuario confirma", () => {
     spyOn(window, "confirm").and.returnValue(true);
     const espiaEliminar = jasmine.createSpy("onEliminar");
-    render(
-      <MemoryRouter>
-        <TablaProductosAdmin productos={PRODUCTOS_DE_PRUEBA} onEliminar={espiaEliminar} />
-      </MemoryRouter>
-    );
+    renderizarTabla({ onEliminar: espiaEliminar });
 
     fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
 
@@ -49,24 +46,29 @@ describe("TablaProductosAdmin", () => {
   it("no elimina el producto cuando el usuario cancela", () => {
     spyOn(window, "confirm").and.returnValue(false);
     const espiaEliminar = jasmine.createSpy("onEliminar");
-    render(
-      <MemoryRouter>
-        <TablaProductosAdmin productos={PRODUCTOS_DE_PRUEBA} onEliminar={espiaEliminar} />
-      </MemoryRouter>
-    );
+    renderizarTabla({ onEliminar: espiaEliminar });
 
     fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
 
     expect(espiaEliminar).not.toHaveBeenCalled();
   });
+
+  // Vista del vendedor: sin editar ni eliminar, solo un enlace al detalle.
+  it("en modo solo lectura no muestra editar ni eliminar, solo el enlace al detalle", () => {
+    renderizarTabla({ soloLectura: true });
+
+    expect(screen.queryByRole("button", { name: "Eliminar" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Editar" })).toBeNull();
+    expect(screen.getAllByRole("link", { name: "Ver detalle" })[0].getAttribute("href")).toBe("/vendedor/productos/1");
+  });
 });
 
-// Pruebas del formulario de producto: validación, edición y datos normalizados.
+// Pruebas del formulario de producto: validación, edición, datos normalizados y errores del backend.
 describe("FormularioProducto", () => {
   // Validación: con campos vacíos se muestran los errores y no se guarda.
   it("muestra errores y no guarda cuando los datos no son válidos", () => {
     const espiaGuardar = jasmine.createSpy("onGuardar");
-    render(<FormularioProducto categorias={CATEGORIAS_INICIALES} onGuardar={espiaGuardar} />);
+    render(<FormularioProducto categorias={CATEGORIAS} onGuardar={espiaGuardar} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
 
@@ -77,16 +79,15 @@ describe("FormularioProducto", () => {
 
   // Estado inicial al editar: los campos vienen cargados con el producto.
   it("carga los datos del producto al editarlo", () => {
-    render(
-      <FormularioProducto productoInicial={PRODUCTOS_DE_PRUEBA[0]} categorias={CATEGORIAS_INICIALES} onGuardar={() => {}} />
-    );
+    render(<FormularioProducto productoInicial={PRODUCTOS[0]} categorias={CATEGORIAS} onGuardar={() => {}} />);
+
     expect(screen.getByLabelText("Nombre").value).toBe("Polerón negro");
   });
 
   // Evento submit: con datos válidos entrega el precio como número.
   it("entrega el precio como número cuando los datos son válidos", () => {
     const espiaGuardar = jasmine.createSpy("onGuardar");
-    render(<FormularioProducto categorias={CATEGORIAS_INICIALES} onGuardar={espiaGuardar} />);
+    render(<FormularioProducto categorias={CATEGORIAS} onGuardar={espiaGuardar} />);
 
     fireEvent.change(screen.getByLabelText("Nombre"), { target: { value: "Gorra negra" } });
     fireEvent.change(screen.getByLabelText("Precio (CLP)"), { target: { value: "7990" } });
@@ -96,83 +97,169 @@ describe("FormularioProducto", () => {
     expect(espiaGuardar).toHaveBeenCalledTimes(1);
     expect(espiaGuardar.calls.mostRecent().args[0].precio).toBe(7990);
   });
+
+  // El backend vuelve a validar: sus errores por campo se muestran junto al campo.
+  it("muestra los errores por campo que envía el backend", () => {
+    render(
+      <FormularioProducto
+        productoInicial={PRODUCTOS[0]}
+        categorias={CATEGORIAS}
+        onGuardar={() => {}}
+        erroresServidor={{ precio: "El precio debe ser mayor que 0." }}
+      />
+    );
+
+    expect(screen.getByText("El precio debe ser mayor que 0.")).toBeTruthy();
+  });
 });
 
-// Pruebas de la protección de rutas del administrador.
-describe("RutaAdmin", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-  });
-
-  function renderizarRutaAdmin() {
+// Pruebas del panel de administración conectado a la API: listar, eliminar, crear y editar.
+describe("PaginaAdmin (lista y eliminar)", () => {
+  function renderizarPanel() {
     return render(
       <MemoryRouter initialEntries={["/admin"]}>
-        <AuthProvider>
-          <Routes>
-            <Route path="/admin" element={<RutaAdmin><h1>Zona privada</h1></RutaAdmin>} />
-            <Route path="/login" element={<h1>Pantalla de ingreso</h1>} />
-          </Routes>
-        </AuthProvider>
+        <Routes>
+          <Route path="/admin" element={<PaginaAdmin />} />
+        </Routes>
       </MemoryRouter>
     );
   }
 
-  // Renderizado condicional: sin sesión de administrador se redirige al login.
-  it("redirige al login cuando no hay sesión de administrador", () => {
-    renderizarRutaAdmin();
-    expect(screen.getByRole("heading", { name: "Pantalla de ingreso" })).toBeTruthy();
+  it("muestra los productos que entrega la API", async () => {
+    simularApi({ "GET /productos": ok(PRODUCTOS), "GET /categorias": ok(CATEGORIAS) });
+    renderizarPanel();
+
+    expect(await screen.findByText(`${PRODUCTOS.length} productos en el catálogo`)).toBeTruthy();
+    expect(screen.getAllByRole("row").length).toBe(PRODUCTOS.length + 1);
   });
 
-  // Renderizado condicional: con sesión de administrador se muestra la página.
-  it("muestra la página cuando el usuario es administrador", () => {
-    window.localStorage.setItem(CLAVE_SESION, JSON.stringify(SESION_ADMIN));
-    renderizarRutaAdmin();
-    expect(screen.getByRole("heading", { name: "Zona privada" })).toBeTruthy();
+  // Eliminar confirmado: se envía DELETE y la lista se vuelve a pedir al backend sin ese producto.
+  it("elimina el producto en el backend cuando el usuario confirma y actualiza la lista", async () => {
+    spyOn(window, "confirm").and.returnValue(true);
+    let productosActuales = [...PRODUCTOS];
+    const espia = simularApi({
+      "GET /productos": () => ok(productosActuales),
+      "GET /categorias": ok(CATEGORIAS),
+      "DELETE /productos/1": () => {
+        productosActuales = productosActuales.filter((producto) => producto.id !== 1);
+        return ok(undefined, 204);
+      },
+    });
+    renderizarPanel();
+    await screen.findByText(`${PRODUCTOS.length} productos en el catálogo`);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
+
+    expect(await screen.findByText(`${PRODUCTOS.length - 1} productos en el catálogo`)).toBeTruthy();
+    expect(llamadasA(espia, "DELETE /productos/1").length).toBe(1);
+  });
+
+  // Regla de negocio del backend: un producto con ventas no se puede eliminar (400).
+  it("muestra el mensaje del backend cuando el producto tiene ventas y no se puede eliminar", async () => {
+    spyOn(window, "confirm").and.returnValue(true);
+    simularApi({
+      "GET /productos": ok(PRODUCTOS),
+      "GET /categorias": ok(CATEGORIAS),
+      "DELETE /productos/1": fallo(400, "No se puede eliminar el producto porque ya tiene ventas registradas."),
+    });
+    renderizarPanel();
+    await screen.findByText(`${PRODUCTOS.length} productos en el catálogo`);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
+
+    expect((await screen.findByRole("alert")).textContent).toBe(
+      "No se puede eliminar el producto porque ya tiene ventas registradas."
+    );
+    expect(screen.getByText(`${PRODUCTOS.length} productos en el catálogo`)).toBeTruthy();
+  });
+
+  it("no envía DELETE cuando el usuario cancela la confirmación", async () => {
+    spyOn(window, "confirm").and.returnValue(false);
+    const espia = simularApi({ "GET /productos": ok(PRODUCTOS), "GET /categorias": ok(CATEGORIAS) });
+    renderizarPanel();
+    await screen.findByText(`${PRODUCTOS.length} productos en el catálogo`);
+
+    fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
+
+    expect(llamadasA(espia, "DELETE /productos/1").length).toBe(0);
   });
 });
 
-// Pruebas de CRUD de punta a punta desde las páginas del panel.
-describe("CRUD de productos desde el panel", () => {
-  beforeEach(() => {
-    window.localStorage.clear();
-    window.localStorage.setItem(CLAVE_SESION, JSON.stringify(SESION_ADMIN));
-  });
-
-  function renderizarPanel(ruta) {
+describe("PaginaAdminProductoFormulario (crear y editar)", () => {
+  function renderizarFormulario(ruta) {
     return render(
       <MemoryRouter initialEntries={[ruta]}>
-        <AuthProvider>
-          <Routes>
-            <Route path="/admin" element={<RutaAdmin><PaginaAdmin /></RutaAdmin>} />
-            <Route path="/admin/productos/nuevo" element={<RutaAdmin><PaginaAdminProductoFormulario /></RutaAdmin>} />
-            <Route path="/admin/productos/:id/editar" element={<RutaAdmin><PaginaAdminProductoFormulario /></RutaAdmin>} />
-          </Routes>
-        </AuthProvider>
+        <Routes>
+          <Route path="/admin" element={<h1>Panel de administración</h1>} />
+          <Route path="/admin/productos/nuevo" element={<PaginaAdminProductoFormulario />} />
+          <Route path="/admin/productos/:id/editar" element={<PaginaAdminProductoFormulario />} />
+        </Routes>
       </MemoryRouter>
     );
   }
 
-  // Crear: el producto nuevo se guarda y aparece en la tabla del panel.
-  it("crea un producto y lo muestra en el panel", () => {
-    renderizarPanel("/admin/productos/nuevo");
-
-    fireEvent.change(screen.getByLabelText("Nombre"), { target: { value: "Gorra negra" } });
+  async function llenarProductoNuevo() {
+    fireEvent.change(await screen.findByLabelText("Nombre"), { target: { value: "Gorra negra" } });
     fireEvent.change(screen.getByLabelText("Precio (CLP)"), { target: { value: "7990" } });
     fireEvent.change(screen.getByLabelText("Categoría"), { target: { value: "accesorios" } });
     fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
+  }
 
-    expect(screen.getByRole("heading", { name: "Panel de administración" })).toBeTruthy();
-    expect(screen.getByText("Gorra negra")).toBeTruthy();
-    expect(obtenerProductos().some((producto) => producto.nombre === "Gorra negra")).toBe(true);
+  // Crear: se envía POST /productos con los datos y se vuelve al panel.
+  it("crea un producto con POST y vuelve al panel", async () => {
+    const espia = simularApi({
+      "GET /categorias": ok(CATEGORIAS),
+      "POST /productos": ok({ ...PRODUCTOS[0], id: 9, nombre: "Gorra negra" }, 201),
+    });
+    renderizarFormulario("/admin/productos/nuevo");
+
+    await llenarProductoNuevo();
+
+    expect(await screen.findByRole("heading", { name: "Panel de administración" })).toBeTruthy();
+    const enviado = llamadasA(espia, "POST /productos")[0].cuerpo;
+    expect(enviado.nombre).toBe("Gorra negra");
+    expect(enviado.precio).toBe(7990);
+    expect(enviado.idCategoria).toBe("accesorios");
   });
 
-  // Actualizar: editar un producto cambia su precio en el almacenamiento.
-  it("actualiza el precio de un producto existente", () => {
-    renderizarPanel("/admin/productos/1/editar");
+  // Actualizar: se carga el producto, se cambia el precio y se envía PUT /productos/1.
+  it("actualiza el precio de un producto existente con PUT", async () => {
+    const espia = simularApi({
+      "GET /categorias": ok(CATEGORIAS),
+      "GET /productos/1": ok(PRODUCTOS[0]),
+      "PUT /productos/1": ok({ ...PRODUCTOS[0], precio: 19990 }),
+    });
+    renderizarFormulario("/admin/productos/1/editar");
 
-    fireEvent.change(screen.getByLabelText("Precio (CLP)"), { target: { value: "19990" } });
+    fireEvent.change(await screen.findByLabelText("Precio (CLP)"), { target: { value: "19990" } });
     fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
 
-    expect(obtenerProductoPorId(1).precio).toBe(19990);
+    expect(await screen.findByRole("heading", { name: "Panel de administración" })).toBeTruthy();
+    expect(llamadasA(espia, "PUT /productos/1")[0].cuerpo.precio).toBe(19990);
+  });
+
+  // Error del backend: se muestra el aviso general y el error junto al campo; no se sale de la página.
+  it("muestra los errores del backend y se queda en el formulario", async () => {
+    simularApi({
+      "GET /categorias": ok(CATEGORIAS),
+      "POST /productos": fallo(400, "Datos inválidos.", { precio: "El precio debe ser mayor que 0." }),
+    });
+    renderizarFormulario("/admin/productos/nuevo");
+
+    await llenarProductoNuevo();
+
+    expect((await screen.findByRole("alert")).textContent).toBe("Datos inválidos.");
+    expect(screen.getByText("El precio debe ser mayor que 0.")).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Panel de administración" })).toBeNull();
+  });
+
+  it("muestra 'Producto no encontrado' al editar un producto que no existe", async () => {
+    simularApi({
+      "GET /categorias": ok(CATEGORIAS),
+      "GET /productos/999": fallo(404, "Producto no encontrado."),
+    });
+    renderizarFormulario("/admin/productos/999/editar");
+
+    expect(await screen.findByRole("heading", { name: "Producto no encontrado" })).toBeTruthy();
   });
 });

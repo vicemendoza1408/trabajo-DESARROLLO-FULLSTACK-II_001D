@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import BarraNavegacion from "../components/BarraNavegacion.jsx";
+import { USUARIO_ADMIN, USUARIO_CLIENTE, USUARIO_VENDEDOR } from "./ayudas.js";
 
 // Pruebas de la barra de navegación: estado del menú, insignia del carrito y eventos.
 describe("BarraNavegacion", () => {
@@ -40,28 +41,54 @@ describe("BarraNavegacion", () => {
   });
 });
 
-// Pruebas de la barra con sesión iniciada: enlace de administración y cierre de sesión.
-describe("BarraNavegacion con sesión iniciada", () => {
-  it("muestra el enlace de administración y el botón para cerrar sesión", () => {
-    const usuarioAdmin = { id: 2, nombre: "Administrador Fuma", rol: "admin" };
-    render(
+// Pruebas del menú según el rol. Es solo una conveniencia visual: la seguridad real la hace el backend.
+describe("BarraNavegacion según el rol", () => {
+  function renderizarConUsuario(usuario, onCerrarSesion = () => {}) {
+    return render(
       <MemoryRouter>
-        <BarraNavegacion cantidadCarrito={0} usuario={usuarioAdmin} onCerrarSesion={() => {}} />
+        <BarraNavegacion cantidadCarrito={0} usuario={usuario} onCerrarSesion={onCerrarSesion} />
       </MemoryRouter>
     );
+  }
 
-    expect(screen.getByRole("link", { name: "Administración" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Cerrar sesión" })).toBeTruthy();
+  it("ofrece Ingresar cuando no hay sesión", () => {
+    renderizarConUsuario(null);
+
+    expect(screen.getByRole("link", { name: "Ingresar" }).getAttribute("href")).toBe("/login");
+    expect(screen.queryByRole("button", { name: "Cerrar sesión" })).toBeNull();
+  });
+
+  it("muestra la tienda y el nombre del cliente, sin administración ni boletas", () => {
+    renderizarConUsuario(USUARIO_CLIENTE);
+
+    expect(screen.getByRole("link", { name: /Carrito/ })).toBeTruthy();
+    expect(screen.getByText("Hola, Cliente Demo")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Administración" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Boletas" })).toBeNull();
+  });
+
+  // El vendedor solo ve productos (en modo consulta) y boletas: no ve la tienda ni el carrito.
+  it("muestra al vendedor solo Productos y Boletas", () => {
+    renderizarConUsuario(USUARIO_VENDEDOR);
+
+    expect(screen.getByRole("link", { name: "Productos" }).getAttribute("href")).toBe("/vendedor/productos");
+    expect(screen.getByRole("link", { name: "Boletas" }).getAttribute("href")).toBe("/boletas");
+    expect(screen.queryByRole("link", { name: /Carrito/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Ofertas" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Administración" })).toBeNull();
+  });
+
+  it("muestra al administrador la tienda, la administración y las boletas", () => {
+    renderizarConUsuario(USUARIO_ADMIN);
+
+    expect(screen.getByRole("link", { name: "Administración" }).getAttribute("href")).toBe("/admin");
+    expect(screen.getByRole("link", { name: "Boletas" }).getAttribute("href")).toBe("/boletas");
+    expect(screen.getByRole("link", { name: /Carrito/ })).toBeTruthy();
   });
 
   it("llama a onCerrarSesion al pulsar Cerrar sesión", () => {
     const espiaCerrar = jasmine.createSpy("onCerrarSesion");
-    const usuarioCliente = { id: 1, nombre: "Cliente Demo", rol: "cliente" };
-    render(
-      <MemoryRouter>
-        <BarraNavegacion cantidadCarrito={0} usuario={usuarioCliente} onCerrarSesion={espiaCerrar} />
-      </MemoryRouter>
-    );
+    renderizarConUsuario(USUARIO_CLIENTE, espiaCerrar);
 
     fireEvent.click(screen.getByRole("button", { name: "Cerrar sesión" }));
 

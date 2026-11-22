@@ -3,7 +3,16 @@
 import { CLAVE_TOKEN, EVENTO_SESION_EXPIRADA } from "../utils/constantes.js";
 
 // Dirección base de la API. Sale del archivo .env (VITE_API_URL); si no existe, usa la de desarrollo.
-const URL_API = import.meta.env?.VITE_API_URL ?? "http://localhost:8080/api/v1";
+// El try/catch es para las pruebas: Vite entrega import.meta.env, pero Karma (webpack) no, y ahí se usa la dirección por defecto.
+function leerUrlApi() {
+  try {
+    return import.meta.env?.VITE_API_URL;
+  } catch {
+    return undefined;
+  }
+}
+
+const URL_API = leerUrlApi() ?? "http://localhost:8080/api/v1";
 
 // ---------- Token JWT guardado en el navegador ----------
 
