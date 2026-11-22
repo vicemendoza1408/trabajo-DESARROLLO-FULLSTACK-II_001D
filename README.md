@@ -2,6 +2,14 @@
 
 Tienda online de ropa desarrollada con React para la Evaluación Parcial 2 de DSY1104 (Desarrollo Fullstack II). En la Evaluación Parcial 3 el frontend se conecta por `fetch` a un backend en Spring Boot con MySQL (repositorio `trabajo-DESARROLLO-FULLSTACK-II_001D-backend`). Todos los datos (productos, categorías, usuarios y boletas) vienen del backend.
 
+## Repositorios del proyecto
+| Repositorio | Contenido | Enlace |
+|---|---|---|
+| `trabajo-DESARROLLO-FULLSTACK-II_001D` (este) | Frontend: React + Vite | https://github.com/vicemendoza1408/trabajo-DESARROLLO-FULLSTACK-II_001D |
+| `trabajo-DESARROLLO-FULLSTACK-II_001D-backend` | Backend: Spring Boot + MySQL + Swagger | https://github.com/vicemendoza1408/trabajo-DESARROLLO-FULLSTACK-II_001D-backend |
+
+Para probar el sistema completo hay que levantar primero el backend (puerto 8080) y después este frontend (puerto 5173). La documentación de la API (Swagger) queda en http://localhost:8080/swagger-ui.html cuando el backend está corriendo.
+
 ## Funcionalidades
 - Catálogo con búsqueda por nombre, categorías, ofertas y detalle de producto.
 - Carrito de compras (agregar, cambiar cantidad, eliminar, vaciar) que se conserva al recargar.
